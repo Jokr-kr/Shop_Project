@@ -20,7 +20,7 @@ public class ItemController implements HttpHandler {
             case "POST" -> new CreateItem();
             case "PUT" -> new UpdateItem();
             case "DELETE" -> new DeleteItem();
-            default -> new UnsupportedMethod();
+            default -> new UnsupportedMethod(); // ¯\_(ツ)_/¯
         };
 
         handler.handle(exchange);
