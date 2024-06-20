@@ -1,10 +1,9 @@
 package com.github.jokrkr.shopproject.server.models;
 
 public class Item {
-    String _name;
-    double _price;
-    String _type;
-
+   private final String _name;
+   private final double _price;
+   private final String _type;
 
     public Item(String type, String name, double price) {
         this._name = name;

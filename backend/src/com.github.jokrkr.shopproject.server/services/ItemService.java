@@ -123,4 +123,6 @@ public class ItemService
         }
     }
 
+    public void updateItem(String type, String name, double price, int quantity) {
+    }
 }
