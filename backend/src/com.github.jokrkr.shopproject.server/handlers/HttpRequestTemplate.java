@@ -22,17 +22,8 @@ public class HttpRequestTemplate {
             URL url = new URL("http://localhost:8080/items");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type", "application/json");
-
-            String jsonInputString = "{\"type\": \"typeA\", \"name\": \"NewItem\", \"price\": 20.0, \"quantity\": 10}";
-            try (OutputStream os = connection.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-
-            int responseCode = connection.getResponseCode();
-            System.out.println("POST Response Code : " + responseCode);
+            setRequest(connection);
+            int responseCode;
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
@@ -49,22 +40,26 @@ public class HttpRequestTemplate {
         }
     }
 
+    private static void setRequest(HttpURLConnection connection) throws IOException {
+        connection.setDoOutput(true);
+        connection.setRequestProperty("Content-Type", "application/json");
+
+        String jsonInputString = "{\"type\": \"typeA\", \"name\": \"NewItem\", \"price\": 20.0, \"quantity\": 10}";
+        try (OutputStream os = connection.getOutputStream()) {
+            byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+            os.write(input, 0, input.length);
+        }
+
+        int responseCode = connection.getResponseCode();
+    }
+
     private static void sendDeleteRequest() {
         try {
             URL url = new URL("http://localhost:8080/items");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("DELETE");
-            connection.setDoOutput(true);
-            connection.setRequestProperty("Content-Type", "application/json");
+            setRequest(connection);
 
-            String jsonInputString = "{\"type\": \"typeA\", \"name\": \"NewItem\", \"price\": 20.0, \"quantity\": 10}";
-            try (OutputStream os = connection.getOutputStream()) {
-                byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-
-            int responseCode = connection.getResponseCode();
-            System.out.println("DELETE Response Code : " + responseCode);
 
             try (BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream(), StandardCharsets.UTF_8))) {
                 StringBuilder response = new StringBuilder();
