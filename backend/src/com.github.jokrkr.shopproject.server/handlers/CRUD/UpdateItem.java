@@ -25,25 +25,10 @@ public class UpdateItem implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         try {
             // Read the request body
-            String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-            System.out.println("Request Body: " + body);
+            requestBodyHandling Body = new requestBodyHandling(exchange);
 
-            // Parse the JSON body
-            JSONObject jsonObject = new JSONObject(body);
-            String type = jsonObject.getString("type");
-            String name = jsonObject.getString("name");
-            double price = jsonObject.getDouble("price");
-            int quantity = jsonObject.getInt("quantity");
-
-            // Validate input
-            if (type == null || name == null || price <= 0 || quantity <= 0) {
-                sendResponse(exchange, 400, "Invalid input data");
-                return;
-            }
-
-            // Update the item using ItemService
-            itemService.updateItem(type, name, price, quantity);  // You need to implement the updateItem method in ItemService
-
+            // Add the item using ItemService
+            itemService.addItem(Body.type, Body.name, Body.price, Body.quantity);
             // Send a success response
             sendResponse(exchange, 200, "Item updated successfully");
 
