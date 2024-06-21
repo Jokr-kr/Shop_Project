@@ -4,6 +4,7 @@ import com.github.jokrkr.shopproject.server.services.ItemService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
+import com.github.jokrkr.shopproject.server.handlers.CRUD.requestBodyHandling;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -25,24 +26,10 @@ public class CreateItem implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         try {
             // Read the request body
-            String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-            System.out.println("Request Body: " + body);
-
-            // Parse the JSON body
-            JSONObject jsonObject = new JSONObject(body);
-            String type = jsonObject.getString("type");
-            String name = jsonObject.getString("name");
-            double price = jsonObject.getDouble("price");
-            int quantity = jsonObject.getInt("quantity");
-
-            // Validate input
-            if (type == null || name == null || price <= 0 || quantity <= 0) {
-                sendResponse(exchange, 400, "Invalid input data");
-                return;
-            }
+            requestBodyHandling Body = new requestBodyHandling(exchange);
 
             // Add the item using ItemService
-            itemService.addItem(type, name, price, quantity);
+            itemService.addItem(Body.type, Body.name, Body.price, Body.quantity);
 
             // Send a success response
             sendResponse(exchange, 200, "Item created successfully");
