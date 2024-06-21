@@ -4,73 +4,37 @@ import com.github.jokrkr.shopproject.server.database.DatabaseConfig;
 
 import java.sql.*;
 
-public class ItemService
-{
+public class ItemService {
     private final Connection conn;
+    private static final String SELECT_SQL = "SELECT id, quantity FROM items WHERE type = ? AND name = ? AND price = ?";
+    private static final String UPDATE_SQL = "UPDATE items SET quantity = quantity + ? WHERE id = ?";
+    private static final String INSERT_SQL = "INSERT INTO items (type, name, price, quantity) VALUES (?, ?, ?, ?)";
+    private static final String DELETE_SQL = "DELETE FROM items WHERE id = ?";
 
-    public ItemService() throws SQLException
-    {
-       conn  = DatabaseConfig.getConnection();
+    public ItemService() throws SQLException {
+        conn = DatabaseConfig.getConnection();
     }
 
 
+//------------------------
     // Select all data
-    public ResultSet getItems() throws SQLException
-    {
-        String query = "SELECT * FROM items";
-        PreparedStatement stmt = conn.prepareStatement(query);
+    public ResultSet getItems() throws SQLException {
+        String getAll = "SELECT * FROM items";
+        PreparedStatement stmt = conn.prepareStatement(getAll);
         return stmt.executeQuery();
     }
+//------------------------
+    // Inserting new item('s) or increasing quantity
+    public void addItem(String type, String name, double price, int quantity) throws SQLException {
+        try (PreparedStatement selectStmt = conn.prepareStatement(SELECT_SQL);
+             PreparedStatement updateStmt = conn.prepareStatement(UPDATE_SQL);
+             PreparedStatement insertStmt = conn.prepareStatement(INSERT_SQL)) {
 
-    public void printItems() throws SQLException {
-        ResultSet rs = getItems();
-        ResultSetMetaData rsmd = rs.getMetaData();
-        int columnsNumber = rsmd.getColumnCount();
-
-        while (rs.next()) {
-            for (int i = 1; i <= columnsNumber; i++) {
-                if (i > 1) System.out.print(",  ");
-                String columnValue = rs.getString(i);
-                System.out.print(rsmd.getColumnName(i) + ": " + columnValue);
-            }
-            System.out.println();
-        }
-    }
-
-    //inserting new item('s) or increasing quantity
-    public void addItem(String type, String name, double price, int quantity) throws SQLException
-    {
-        String selectSQL = "SELECT id, quantity FROM items WHERE type = ? AND name = ? AND price = ?";
-        String updateSQL = "UPDATE items SET quantity = quantity + ? WHERE id = ?";
-        String insertSQL = "INSERT INTO items (type, name, price, quantity) VALUES (?, ?, ?, ?)";
-
-        try (PreparedStatement selectStmt = conn.prepareStatement(selectSQL);
-             PreparedStatement updateStmt = conn.prepareStatement(updateSQL);
-             PreparedStatement insertStmt = conn.prepareStatement(insertSQL)) {
-
-            // Check if the item already exists with the same type, name, and price
-            selectStmt.setString(1, type);
-            selectStmt.setString(2, name);
-            selectStmt.setDouble(3, price);
-            ResultSet rs = selectStmt.executeQuery();   /*if the result from selectStmt returns a row in the ResultSet
-                                                          it means there is an existing item that matches*/
-            if (rs.next()) {
-                // Item exists, update the quantity
-                int id = rs.getInt("id");
-                int existingQuantity = rs.getInt("quantity");
-
-                updateStmt.setInt(1, quantity);
-                updateStmt.setInt(2, id);
-                updateStmt.executeUpdate();
-
+            if (itemExists(selectStmt, type, name, price)) {
+                int id = getItemId(selectStmt, type, name, price);
+                updateItemQuantity(updateStmt, id, quantity);
             } else {
-                // Item does not exist, insert a new item
-                insertStmt.setString(1, type);
-                insertStmt.setString(2, name);
-                insertStmt.setDouble(3, price);
-                insertStmt.setInt(4, quantity);
-                insertStmt.executeUpdate();
-
+                insertNewItem(insertStmt, type, name, price, quantity);
                 System.out.println("Inserted new item: " + name);
             }
         } catch (SQLException e) {
@@ -78,41 +42,25 @@ public class ItemService
             throw e;
         }
     }
-
-
+//------------------------
+    // Removing item('s) or decreasing quantity
     public void removeItem(String type, String name, double price, int quantityToDecrement) throws SQLException {
-        String selectSQL = "SELECT id, quantity FROM items WHERE type = ? AND name = ? AND price = ?";
-        String updateSQL = "UPDATE items SET quantity = quantity - ? WHERE id = ?";
-        String deleteSQL = "DELETE FROM items WHERE id = ?";
+        try (PreparedStatement selectStmt = conn.prepareStatement(SELECT_SQL);
+             PreparedStatement updateStmt = conn.prepareStatement(UPDATE_SQL);
+             PreparedStatement deleteStmt = conn.prepareStatement(DELETE_SQL)) {
 
-        try (PreparedStatement selectStmt = conn.prepareStatement(selectSQL);
-             PreparedStatement updateStmt = conn.prepareStatement(updateSQL);
-             PreparedStatement deleteStmt = conn.prepareStatement(deleteSQL)) {
-
-            // Check if the item exists with the specified type, name, and price
-            selectStmt.setString(1, type);
-            selectStmt.setString(2, name);
-            selectStmt.setDouble(3, price);
-            ResultSet rs = selectStmt.executeQuery();       /*if the result from selectStmt returns a row in the ResultSet
-                                                              it means there is an existing item that matches*/
-            if (rs.next()) {
-                // Item exists, get the current quantity
-                int id = rs.getInt("id");
-                int existingQuantity = rs.getInt("quantity");
+            if (itemExists(selectStmt, type, name, price)) {
+                int id = getItemId(selectStmt, type, name, price);
+                int existingQuantity = getItemQuantity(selectStmt, type, name, price);
 
                 if (existingQuantity > quantityToDecrement) {
-                    // Decrement the quantity
-                    updateStmt.setInt(1, quantityToDecrement);
-                    updateStmt.setInt(2, id);
-                    updateStmt.executeUpdate();
-
-                    System.out.println("Decremented item: " + name + ". New quantity: " + (existingQuantity - quantityToDecrement));
-                } else {
-                    // Delete the item
-                    deleteStmt.setInt(1, id);
-                    deleteStmt.executeUpdate();
-
+                    updateItemQuantity(updateStmt, id, -quantityToDecrement);
+                    System.out.println("removed item's: " + name + ". New quantity: " + (existingQuantity - quantityToDecrement));
+                } else if (existingQuantity == quantityToDecrement) {
+                    deleteItem(deleteStmt, id);
                     System.out.println("Deleted item: " + name);
+                } else {
+                    throw new IllegalArgumentException("Quantity to remove is greater than the existing quantity");
                 }
             } else {
                 System.out.println("Item not found: " + name);
@@ -122,7 +70,62 @@ public class ItemService
             throw e;
         }
     }
-
-    public void updateItem(String type, String name, double price, int quantity) {
+//------------------------
+    // checks if item exists in database
+    private boolean itemExists(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
+        selectStmt.setString(1, type);
+        selectStmt.setString(2, name);
+        selectStmt.setDouble(3, price);
+        try (ResultSet rs = selectStmt.executeQuery()) {
+            return rs.next();
+        }
+    }
+//------------------------
+    //gets the item id from the database
+    private int getItemId(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
+        selectStmt.setString(1, type);
+        selectStmt.setString(2, name);
+        selectStmt.setDouble(3, price);
+        try (ResultSet rs = selectStmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("id");
+            }
+            throw new SQLException("Item not found");
+        }
+    }
+//------------------------
+    //checks an item quantity
+    private int getItemQuantity(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
+        selectStmt.setString(1, type);
+        selectStmt.setString(2, name);
+        selectStmt.setDouble(3, price);
+        try (ResultSet rs = selectStmt.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt("quantity");
+            }
+            throw new SQLException("Item not found");
+        }
+    }
+//------------------------
+    //updates an item quantity
+    private void updateItemQuantity(PreparedStatement updateStmt, int id, int quantity) throws SQLException {
+        updateStmt.setInt(1, quantity);
+        updateStmt.setInt(2, id);
+        updateStmt.executeUpdate();
+    }
+//------------------------
+    //adds a new item
+    private void insertNewItem(PreparedStatement insertStmt, String type, String name, double price, int quantity) throws SQLException {
+        insertStmt.setString(1, type);
+        insertStmt.setString(2, name);
+        insertStmt.setDouble(3, price);
+        insertStmt.setInt(4, quantity);
+        insertStmt.executeUpdate();
+    }
+//------------------------
+    //deletes an item
+    private void deleteItem(PreparedStatement deleteStmt, int id) throws SQLException {
+        deleteStmt.setInt(1, id);
+        deleteStmt.executeUpdate();
     }
 }
