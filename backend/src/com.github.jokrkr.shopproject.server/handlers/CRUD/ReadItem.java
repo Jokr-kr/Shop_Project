@@ -1,6 +1,8 @@
 package com.github.jokrkr.shopproject.server.handlers.CRUD;
 
+import com.github.jokrkr.shopproject.server.models.Item;
 import com.github.jokrkr.shopproject.server.services.ItemService;
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -28,26 +30,27 @@ public class ReadItem implements HttpHandler {
         try {
             // Retrieve items from the database
             ResultSet resultSet = itemService.getItems();
-            List<String> items = new ArrayList<>();
+            List<Item> items = new ArrayList<>();
             while (resultSet.next()) {
-                String item = String.format("ID: %d, Type: %s, Name: %s, Price: %.2f, Quantity: %d",
-                        resultSet.getInt("id"),
+                Item item = new Item (
                         resultSet.getString("type"),
                         resultSet.getString("name"),
                         resultSet.getDouble("price"),
-                        resultSet.getInt("quantity"));
+                        resultSet.getInt("quantity"),
+                        resultSet.getDouble("value"));
                 items.add(item);
             }
-
+            Gson gson = new Gson();
+            String JsonResponse = gson.toJson(items);
             // Prepare the response
-            String response = String.join("\n", items);
-            sendResponse(exchange, 200, response);
+            sendResponse(exchange, 200, JsonResponse);
 
         } catch (SQLException e) {
             e.printStackTrace();
             sendResponse(exchange, 500, "Internal Server Error");
         }
     }
+
 
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
         exchange.getResponseHeaders().add("Content-Type", "text/plain; charset=UTF-8");

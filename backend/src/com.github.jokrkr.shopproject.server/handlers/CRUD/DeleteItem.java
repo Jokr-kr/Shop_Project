@@ -1,11 +1,14 @@
 package com.github.jokrkr.shopproject.server.handlers.CRUD;
 
+import com.github.jokrkr.shopproject.server.models.Item;
 import com.github.jokrkr.shopproject.server.services.ItemService;
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.json.JSONObject;
+
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
@@ -24,27 +27,20 @@ public class DeleteItem implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
-            // Read the request body
-            String body = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
-            System.out.println("Request Body: " + body);
+            Gson gson = new Gson();
+            Item item = gson.fromJson(
+                    new InputStreamReader(
+                            exchange.getRequestBody(),
+                            StandardCharsets.UTF_8),
+                    Item.class);
 
-            // Parse the JSON body
-            JSONObject jsonObject = new JSONObject(body);
-            String type = jsonObject.getString("type");
-            String name = jsonObject.getString("name");
-            double price = jsonObject.getDouble("price");
-            int quantity = jsonObject.getInt("quantity");
+            itemService.removeItem(
+                    item.getType(),
+                    item.getName(),
+                    item.getPrice(),
+                    item.getQuantity());
 
-            // Validate input
-            if (type == null || name == null || price <= 0 || quantity <= 0) {
-                sendResponse(exchange, 400, "Invalid input data");
-                return;
-            }
 
-            // Remove the item using ItemService
-            itemService.removeItem(type, name, price, quantity);
-
-            // Send a success response
             sendResponse(exchange, 200, "Item deleted successfully");
 
         } catch (Exception e) {

@@ -1,12 +1,13 @@
 package com.github.jokrkr.shopproject.server.handlers.CRUD;
 
+import com.github.jokrkr.shopproject.server.models.Item;
 import com.github.jokrkr.shopproject.server.services.ItemService;
+import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import org.json.JSONObject;
-import com.github.jokrkr.shopproject.server.handlers.CRUD.requestBodyHandling;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
@@ -25,13 +26,19 @@ public class CreateItem implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
-            // Read the request body
-            requestBodyHandling Body = new requestBodyHandling(exchange);
+            Gson gson = new Gson();
+            Item item = gson.fromJson(
+                    new InputStreamReader(
+                            exchange.getRequestBody(),
+                            StandardCharsets.UTF_8),
+                    Item.class);
 
-            // Add the item using ItemService
-            itemService.addItem(Body.type, Body.name, Body.price, Body.quantity);
+            itemService.addItem(
+                    item.getType(),
+                    item.getName(),
+                    item.getPrice(),
+                    item.getQuantity());
 
-            // Send a success response
             sendResponse(exchange, 200, "Item created successfully");
 
         } catch (Exception e) {
