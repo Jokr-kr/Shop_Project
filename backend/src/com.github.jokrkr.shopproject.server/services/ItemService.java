@@ -11,19 +11,21 @@ public class ItemService {
     private static final String INSERT_SQL = "INSERT INTO items (type, name, price, quantity) VALUES (?, ?, ?, ?)";
     private static final String DELETE_SQL = "DELETE FROM items WHERE id = ?";
 
+    //------------------------
+    // establishes connection to the database
     public ItemService() throws SQLException {
         conn = DatabaseConfig.getConnection();
     }
 
-
-//------------------------
+    //------------------------
     // Select all data
     public ResultSet getItems() throws SQLException {
-        String getAll = "SELECT * FROM items";
+        String getAll = "SELECT type, name, price, quantity, value FROM items";
         PreparedStatement stmt = conn.prepareStatement(getAll);
         return stmt.executeQuery();
     }
-//------------------------
+
+    //------------------------
     // Inserting new item('s) or increasing quantity
     public void addItem(String type, String name, double price, int quantity) throws SQLException {
         try (PreparedStatement selectStmt = conn.prepareStatement(SELECT_SQL);
@@ -42,7 +44,8 @@ public class ItemService {
             throw e;
         }
     }
-//------------------------
+
+    //------------------------
     // Removing item('s) or decreasing quantity
     public void removeItem(String type, String name, double price, int quantityToDecrement) throws SQLException {
         try (PreparedStatement selectStmt = conn.prepareStatement(SELECT_SQL);
@@ -70,7 +73,8 @@ public class ItemService {
             throw e;
         }
     }
-//------------------------
+
+    //------------------------
     // checks if item exists in database
     private boolean itemExists(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
         selectStmt.setString(1, type);
@@ -80,7 +84,8 @@ public class ItemService {
             return rs.next();
         }
     }
-//------------------------
+
+    //------------------------
     //gets the item id from the database
     private int getItemId(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
         selectStmt.setString(1, type);
@@ -93,7 +98,8 @@ public class ItemService {
             throw new SQLException("Item not found");
         }
     }
-//------------------------
+
+    //------------------------
     //checks an item quantity
     private int getItemQuantity(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
         selectStmt.setString(1, type);
@@ -106,14 +112,16 @@ public class ItemService {
             throw new SQLException("Item not found");
         }
     }
-//------------------------
+
+    //------------------------
     //updates an item quantity
     private void updateItemQuantity(PreparedStatement updateStmt, int id, int quantity) throws SQLException {
         updateStmt.setInt(1, quantity);
         updateStmt.setInt(2, id);
         updateStmt.executeUpdate();
     }
-//------------------------
+
+    //------------------------
     //adds a new item
     private void insertNewItem(PreparedStatement insertStmt, String type, String name, double price, int quantity) throws SQLException {
         insertStmt.setString(1, type);
@@ -122,7 +130,8 @@ public class ItemService {
         insertStmt.setInt(4, quantity);
         insertStmt.executeUpdate();
     }
-//------------------------
+
+    //------------------------
     //deletes an item
     private void deleteItem(PreparedStatement deleteStmt, int id) throws SQLException {
         deleteStmt.setInt(1, id);
