@@ -42,7 +42,7 @@ public class ReadItem implements HttpHandler {
             }
             Gson gson = new Gson();
             String JsonResponse = gson.toJson(items);
-            // Prepare the response
+            
             sendResponse(exchange, 200, JsonResponse);
 
         } catch (SQLException e) {
