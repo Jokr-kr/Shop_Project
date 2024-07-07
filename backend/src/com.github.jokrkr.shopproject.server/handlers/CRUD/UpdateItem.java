@@ -47,6 +47,8 @@ public class UpdateItem implements HttpHandler {
         }
     }
 
+    //------------------------
+    //
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
         exchange.getResponseHeaders().add("Content-Type", "application/json");
         exchange.sendResponseHeaders(statusCode, response.getBytes(StandardCharsets.UTF_8).length);

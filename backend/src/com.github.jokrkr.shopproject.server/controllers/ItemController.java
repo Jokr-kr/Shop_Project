@@ -15,25 +15,13 @@ public class ItemController implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
-        HttpHandler handler;
-
-        switch (method) {
-            case "GET":
-                handler = new ReadItem();
-                break;
-            case "POST":
-                handler = new CreateItem();
-                break;
-            case "PUT":
-                handler = new UpdateItem();
-                break;
-            case "DELETE":
-                handler = new DeleteItem();
-                break;
-            default:
-                handler = new UnsupportedMethod();
-                break;
-        }
+        HttpHandler handler = switch (method) {
+            case "GET" -> new ReadItem();
+            case "POST" -> new CreateItem();
+            case "PUT" -> new UpdateItem();
+            case "DELETE" -> new DeleteItem();
+            default -> new UnsupportedMethod();
+        };
 
         handler.handle(exchange);
     }

@@ -1,10 +1,13 @@
 package com.github.jokrkr.shopproject.server.services;
 
 import com.github.jokrkr.shopproject.server.database.DatabaseConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
 public class ItemService {
+    private static final Logger logger = LoggerFactory.getLogger(ItemService.class);
     private final Connection conn;
     private static final String SELECT_SQL = "SELECT id, quantity FROM items WHERE type = ? AND name = ? AND price = ?";
     private static final String UPDATE_SQL = "UPDATE items SET quantity = quantity + ? WHERE id = ?";
@@ -37,10 +40,10 @@ public class ItemService {
                 updateItemQuantity(updateStmt, id, quantity);
             } else {
                 insertNewItem(insertStmt, type, name, price, quantity);
-                System.out.println("Inserted new item: " + name);
+                logger.info("Inserted new item: {}", name);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Failed to add item", e);
             throw e;
         }
     }
@@ -58,29 +61,35 @@ public class ItemService {
 
                 if (existingQuantity > quantityToDecrement) {
                     updateItemQuantity(updateStmt, id, -quantityToDecrement);
-                    System.out.println("removed item's: " + name + ". New quantity: " + (existingQuantity - quantityToDecrement));
+                    logger.info("Removed items: {}. New quantity: {}", name, existingQuantity - quantityToDecrement);
                 } else if (existingQuantity == quantityToDecrement) {
                     deleteItem(deleteStmt, id);
-                    System.out.println("Deleted item: " + name);
+                    logger.info("Deleted item: {}", name);
                 } else {
                     throw new IllegalArgumentException("Quantity to remove is greater than the existing quantity");
                 }
             } else {
-                System.out.println("Item not found: " + name);
+                logger.info("Item not found: {}", name);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("Failed to remove item", e);
             throw e;
         }
     }
 
     //------------------------
+    //setting up the item
+    private ResultSet getItemResultSet(PreparedStatement stmt, String type, String name, double price) throws SQLException {
+        stmt.setString(1, type);
+        stmt.setString(2, name);
+        stmt.setDouble(3, price);
+        return stmt.executeQuery();
+    }
+
+    //------------------------
     // checks if item exists in database
     private boolean itemExists(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
-        selectStmt.setString(1, type);
-        selectStmt.setString(2, name);
-        selectStmt.setDouble(3, price);
-        try (ResultSet rs = selectStmt.executeQuery()) {
+        try (ResultSet rs = getItemResultSet(selectStmt, type, name, price)) {
             return rs.next();
         }
     }
@@ -88,10 +97,7 @@ public class ItemService {
     //------------------------
     //gets the item id from the database
     private int getItemId(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
-        selectStmt.setString(1, type);
-        selectStmt.setString(2, name);
-        selectStmt.setDouble(3, price);
-        try (ResultSet rs = selectStmt.executeQuery()) {
+        try (ResultSet rs = getItemResultSet(selectStmt, type, name, price)) {
             if (rs.next()) {
                 return rs.getInt("id");
             }
@@ -102,10 +108,7 @@ public class ItemService {
     //------------------------
     //checks an item quantity
     private int getItemQuantity(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
-        selectStmt.setString(1, type);
-        selectStmt.setString(2, name);
-        selectStmt.setDouble(3, price);
-        try (ResultSet rs = selectStmt.executeQuery()) {
+        try (ResultSet rs = getItemResultSet(selectStmt, type, name, price)) {
             if (rs.next()) {
                 return rs.getInt("quantity");
             }
@@ -137,4 +140,15 @@ public class ItemService {
         deleteStmt.setInt(1, id);
         deleteStmt.executeUpdate();
     }
+
+    public void close() {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
