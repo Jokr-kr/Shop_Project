@@ -11,6 +11,6 @@
     <Label text="Login" style="-fx-font-size: 36px;"/>
     <TextField fx:id="usernameField" promptText="Username" prefWidth="200" maxWidth="200" style="-fx-prompt-text-fill: derive(-fx-control-inner-background, -30%); -fx-alignment: CENTER;"/>
     <PasswordField fx:id="passwordField" promptText="Password" prefWidth="200" maxWidth="200" style="-fx-prompt-text-fill: derive(-fx-control-inner-background, -30%); -fx-alignment: CENTER;"/>
-    <Button text="Login" fx:id="loginButton" onAction="TryToLoggIn"/>
+    <Button text="Login" fx:id="loginButton" onAction="#TryToLoggIn"/>
     <Label text=" " style="-fx-font-size: 24px;"/>
 </VBox>

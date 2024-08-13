@@ -1,5 +1,6 @@
 package com.github.jokrkr.shopproject.ui.controllers;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
@@ -27,5 +28,9 @@ public class LoginController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void TryToLoggIn(ActionEvent actionEvent) {
+
     }
 }
