@@ -5,19 +5,20 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class DatabaseConfig {
-    // Retrieve database configuration from environment variables
-    private static final String URL = System.getenv("DATABASE_URL");
+    // Base URL without the database name
+    private static final String BASE_URL = System.getenv("DATABASE_URL");
     private static final String USER = System.getenv("DATABASE_USERNAME");
     private static final String PASSWORD = System.getenv("DATABASE_PASSWORD");
 
-    // Method to get a connection to the database
-    public static Connection getConnection() throws SQLException {
-        System.out.println(URL + " " + USER + " " + PASSWORD + " database connection" );
+    // Method to get a connection to a specific database
 
-        if (URL == null || USER == null || PASSWORD == null) {
-            throw new IllegalStateException("Database environment variables not set");
+public static Connection getConnection(String dbName) throws SQLException {
+    System.out.println(BASE_URL + "/" + dbName + USER + " " + PASSWORD + " database connection" );
+    if (BASE_URL == null || USER == null || PASSWORD == null) {
+        throw new IllegalStateException("Database environment variables not set");
 
-        }
-        return DriverManager.getConnection(URL, USER, PASSWORD);
     }
+    String fullUrl = BASE_URL + "/" + dbName;  // Append the database name to the base URL
+    return DriverManager.getConnection(fullUrl, USER, PASSWORD);
+}
 }
