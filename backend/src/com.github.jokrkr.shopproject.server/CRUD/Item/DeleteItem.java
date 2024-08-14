@@ -1,4 +1,4 @@
-package com.github.jokrkr.shopproject.server.handlers.CRUD;
+package com.github.jokrkr.shopproject.server.CRUD.Item;
 
 import com.github.jokrkr.shopproject.server.models.Item;
 import com.github.jokrkr.shopproject.server.services.ItemService;

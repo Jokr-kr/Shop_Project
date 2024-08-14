@@ -1,4 +1,4 @@
-package com.github.jokrkr.shopproject.server.handlers;
+package com.github.jokrkr.shopproject.server.CRUD;
 
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
