@@ -9,7 +9,7 @@ public class User {
     private final String _passwordHash;
     private final Role _role;
 
-    public User(String UserName, String Password, boolean Admin, Role Role) {
+    public User(String UserName, String Password, Role Role) {
         this._userName = UserName;
         this._passwordHash = HashPassword(Password);
         this._role = Role;
