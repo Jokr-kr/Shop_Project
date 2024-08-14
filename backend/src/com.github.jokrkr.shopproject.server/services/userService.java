@@ -53,6 +53,17 @@ public class userService {
         ps.setString(2, User.getUserName());
         ps.executeUpdate();
     }
+    //------------------------
+    //closes connection
+    public void close() {
+        if (conn != null) {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 
 
