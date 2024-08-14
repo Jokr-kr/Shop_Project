@@ -1,16 +1,17 @@
 package com.github.jokrkr.shopproject.server.CRUD.Users;
 
 import com.github.jokrkr.shopproject.server.CRUD.Item.CreateItem;
-import com.github.jokrkr.shopproject.server.models.Item;
+import com.github.jokrkr.shopproject.server.models.Role;
 import com.github.jokrkr.shopproject.server.models.User;
 import com.github.jokrkr.shopproject.server.services.userService;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -30,7 +31,7 @@ public class CreateUser implements HttpHandler {
             validateUser(user);
 
             userService.createUser(user);
-            sendResponse(exchange, 200, "Item created successfully");
+            sendResponse(exchange, 200, "User created successfully");
             logger.info("Item created successfully: {}", user.getUserName());
 
         } catch (JsonSyntaxException e) {
@@ -62,8 +63,16 @@ public class CreateUser implements HttpHandler {
                 rawJson.append(line);
             }
             String jsonString = rawJson.toString();
+
+            JsonObject object = JsonParser.parseString(jsonString).getAsJsonObject();
+            String userName = object.get("userName").getAsString();
+            String password = object.get("password").getAsString();
+            String roleString = object.get("role").getAsString();
+
+            Role role = Role.valueOf(roleString);
+            User user = new User(userName,password,role);
             logger.info("Raw JSON Input: {}", jsonString);
-            return gson.fromJson(jsonString, User.class);
+            return user;
         }
     }
 
