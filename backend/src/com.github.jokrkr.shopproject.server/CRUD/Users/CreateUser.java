@@ -1,10 +1,8 @@
 package com.github.jokrkr.shopproject.server.CRUD.Users;
 
-import com.github.jokrkr.shopproject.server.CRUD.Item.CreateItem;
 import com.github.jokrkr.shopproject.server.models.Role;
 import com.github.jokrkr.shopproject.server.models.User;
 import com.github.jokrkr.shopproject.server.services.userService;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
@@ -19,8 +17,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 public class CreateUser implements HttpHandler {
-    private static final Logger logger = LoggerFactory.getLogger(CreateItem.class);
-    private final Gson gson = new Gson();
+    private static final Logger logger = LoggerFactory.getLogger(CreateUser.class);
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
