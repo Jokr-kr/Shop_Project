@@ -2,6 +2,9 @@ package com.github.jokrkr.shopproject.server.controllers;
 
 import com.github.jokrkr.shopproject.server.CRUD.UnsupportedMethod;
 import com.github.jokrkr.shopproject.server.CRUD.Users.CreateUser;
+import com.github.jokrkr.shopproject.server.CRUD.Users.DeleteUser;
+import com.github.jokrkr.shopproject.server.CRUD.Users.ReadUser;
+import com.github.jokrkr.shopproject.server.CRUD.Users.UpdateUserPassword;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
