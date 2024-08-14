@@ -17,7 +17,7 @@ public class ItemService {
     //------------------------
     // establishes connection to the database
     public ItemService() throws SQLException {
-        conn = DatabaseConfig.getConnection();
+        this.conn = DatabaseConfig.getConnection("inventory");
     }
 
     //------------------------
