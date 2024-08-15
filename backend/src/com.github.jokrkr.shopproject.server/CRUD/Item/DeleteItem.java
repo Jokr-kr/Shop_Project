@@ -31,7 +31,12 @@ public class DeleteItem implements HttpHandler {
                 return;
             }
 
-            itemService.removeItem(item.getType(), item.getName(), item.getPrice(), item.getQuantity());
+            itemService.removeItem(
+                    item.getType(),
+                    item.getName(),
+                    item.getPrice(),
+                    item.getQuantity());
+
             sendResponse(exchange, 200, "Item deleted successfully");
             logger.info("Item deleted successfully: {}", item.getName());
 

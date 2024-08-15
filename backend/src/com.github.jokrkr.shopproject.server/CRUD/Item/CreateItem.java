@@ -28,7 +28,11 @@ public class CreateItem implements HttpHandler {
             Item item = parseRequestBody(exchange);
             validateItem(item);
 
-            itemService.addItem(item.getType(), item.getName(), item.getPrice(), item.getQuantity());
+            itemService.addItem(
+                    item.getType(),
+                    item.getName(),
+                    item.getPrice(),
+                    item.getQuantity());
             sendResponse(exchange, 200, "Item created successfully");
             logger.info("Item created successfully: {}", item.getName());
 

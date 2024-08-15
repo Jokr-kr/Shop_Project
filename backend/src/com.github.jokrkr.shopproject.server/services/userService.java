@@ -1,7 +1,6 @@
 package com.github.jokrkr.shopproject.server.services;
 
 import com.github.jokrkr.shopproject.server.database.DatabaseConfig;
-import com.github.jokrkr.shopproject.server.models.Role;
 import com.github.jokrkr.shopproject.server.models.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
