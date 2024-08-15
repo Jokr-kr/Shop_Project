@@ -23,6 +23,7 @@ public class User {
  for (byte b : hash) {
      hexString.append(String.format("%02X", b));
  }
+
  return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("error while hashing password", e);
