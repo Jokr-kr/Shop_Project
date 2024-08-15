@@ -1,7 +1,9 @@
 package com.github.jokrkr.shopproject.server.services;
 
 import com.github.jokrkr.shopproject.server.database.DatabaseConfig;
+import com.github.jokrkr.shopproject.server.models.Role;
 import com.github.jokrkr.shopproject.server.models.User;
+import com.github.jokrkr.shopproject.server.response.LoginResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,6 +18,7 @@ public class userService {
     public userService() throws SQLException {
         this.conn = DatabaseConfig.getConnection("users");
     }
+
     //------------------------
     // user creation
     public void createUser(User newUser) throws SQLException {
@@ -27,6 +30,27 @@ public class userService {
             ps.executeUpdate();  // Use executeUpdate for INSERT, UPDATE, DELETE
         }
     }
+
+    //------------------------
+    // user deletion
+    public boolean deleteUser(String adminUsername, String adminPassword, String username) throws SQLException {
+        LoginService access = new LoginService();
+        LoginResponse loginResponse = access.authenticate(adminUsername, adminPassword);
+        if (!"SUCCESS".equals(loginResponse.getStatus())) {
+            return false;
+        }
+        Role role = access.getRole(adminUsername);
+        if (role != Role.admin) {
+            return false;
+        }
+        String query = "DELETE FROM users WHERE username = ?";
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
+            stmt.setString(1, username);
+            int affectedRows = stmt.executeUpdate();
+            return affectedRows > 0; //returns 1 if a user was deleted and 0 of not
+        }
+    }
+
     //------------------------
     // retrieval of user data
     public ResultSet getUsers() throws SQLException {
@@ -34,6 +58,7 @@ public class userService {
         PreparedStatement ps = conn.prepareStatement(Query);
         return ps.executeQuery();
     }
+
     //------------------------
     // retrieval of password hash
     public ResultSet getpasswordhash(String username) throws SQLException {
@@ -42,8 +67,9 @@ public class userService {
         ps.setString(1, username);
         return ps.executeQuery();
     }
+
     //------------------------
-    //for changing password
+    // for changing password
     public void updatepassword(User User) throws SQLException {
 
         String Query = "update users set password_hash = ? where username = ?";
@@ -52,8 +78,9 @@ public class userService {
         ps.setString(2, User.getUserName());
         ps.executeUpdate();
     }
+
     //------------------------
-    //closes connection
+    // closes connection
     public void close() {
         if (conn != null) {
             try {
