@@ -2,6 +2,7 @@ package com.github.jokrkr.shopproject.server.services;
 
 import com.github.jokrkr.shopproject.server.database.DatabaseConfig;
 import com.github.jokrkr.shopproject.server.response.LoginResponse;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
@@ -27,12 +28,12 @@ public class LoginService {
                 String storedHash = rs.getString("password_hash");
                 String providedHash = hashPassword(password);
                 if (storedHash.equals(providedHash)) {
-                    return LoginResponse.SUCCESS;
+                    return LoginResponse.success();
                 } else {
-                    return LoginResponse.INCORRECT_PASSWORD;
+                    return LoginResponse.incorrectPassword();
                 }
             } else {
-                return LoginResponse.USERNAME_NOT_FOUND;
+                return LoginResponse.usernameNotFound();
             }
         }
     }
