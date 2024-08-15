@@ -1,7 +1,7 @@
 package com.github.jokrkr.shopproject.server.CRUD.Item;
 
 import com.github.jokrkr.shopproject.server.models.Item;
-import com.github.jokrkr.shopproject.server.services.ItemService;
+import com.github.jokrkr.shopproject.server.services.itemService;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -13,11 +13,11 @@ import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
 public class UpdateItem implements HttpHandler {
-    private final ItemService itemService;
+    private final com.github.jokrkr.shopproject.server.services.itemService itemService;
 
     public UpdateItem() {
         try {
-            itemService = new ItemService();
+            itemService = new itemService();
         } catch (SQLException e) {
             throw new RuntimeException("Error initializing ItemService", e);
         }

@@ -1,7 +1,7 @@
 package com.github.jokrkr.shopproject.server.CRUD.Item;
 
 import com.github.jokrkr.shopproject.server.models.Item;
-import com.github.jokrkr.shopproject.server.services.ItemService;
+import com.github.jokrkr.shopproject.server.services.itemService;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.sun.net.httpserver.HttpExchange;
@@ -22,9 +22,9 @@ public class CreateItem implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        ItemService itemService = null;
+        itemService itemService = null;
         try {
-            itemService = new ItemService();
+            itemService = new itemService();
             Item item = parseRequestBody(exchange);
             validateItem(item);
 

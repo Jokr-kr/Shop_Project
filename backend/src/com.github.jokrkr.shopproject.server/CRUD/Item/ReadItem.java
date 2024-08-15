@@ -1,7 +1,7 @@
 package com.github.jokrkr.shopproject.server.CRUD.Item;
 
 import com.github.jokrkr.shopproject.server.models.Item;
-import com.github.jokrkr.shopproject.server.services.ItemService;
+import com.github.jokrkr.shopproject.server.services.itemService;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -22,9 +22,9 @@ public class ReadItem implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        ItemService itemService = null;
+        itemService itemService = null;
         try {
-            itemService = new ItemService();
+            itemService = new itemService();
             List<Item> items = getItemsFromDatabase(itemService);
             String jsonResponse = gson.toJson(items);
 
@@ -43,7 +43,7 @@ public class ReadItem implements HttpHandler {
         }
     }
 
-    private List<Item> getItemsFromDatabase(ItemService itemService) throws SQLException {
+    private List<Item> getItemsFromDatabase(itemService itemService) throws SQLException {
         ResultSet resultSet = itemService.getItems();
         List<Item> items = new ArrayList<>();
         while (resultSet.next()) {
