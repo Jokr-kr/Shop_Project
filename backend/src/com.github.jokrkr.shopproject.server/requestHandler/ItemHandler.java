@@ -1,4 +1,4 @@
-package com.github.jokrkr.shopproject.server.controllers;
+package com.github.jokrkr.shopproject.server.requestHandler;
 
 import com.github.jokrkr.shopproject.server.CRUD.Item.CreateItem;
 import com.github.jokrkr.shopproject.server.CRUD.Item.ReadItem;
@@ -10,7 +10,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 
-public class ItemController implements HttpHandler {
+public class ItemHandler implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
