@@ -134,14 +134,6 @@ The JavaFX client allows you to:
 - **SLF4J with Logback**: For logging.
 - **Gson**: For parsing JSON data.
 
-## Contributing
-
-Contributions are welcome! Please fork the repository and create a pull request with your changes. Make sure to follow the existing coding style and include tests for any new functionality.
-
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
-
----
-
-This format with hashtags (Markdown) should be directly usable in your README file. You can customize any sections or content as needed.
