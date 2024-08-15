@@ -72,7 +72,6 @@ public class CreateUser implements HttpHandler {
             return user;
         }
     }
-
     //------------------------
     //
     private void validateUser(User user) {
@@ -81,7 +80,6 @@ public class CreateUser implements HttpHandler {
             throw new IllegalArgumentException("Invalid input data");
         }
     }
-
     //------------------------
     //
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
