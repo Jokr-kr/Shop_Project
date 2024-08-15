@@ -15,8 +15,7 @@ public class ItemHandler implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
-        //------------------
-        //this selects which handler to use
+
         HttpHandler handler = switch (method) {
             case "GET" -> new ReadItem();
             case "POST" -> new CreateItem();
@@ -24,8 +23,6 @@ public class ItemHandler implements HttpHandler {
             case "DELETE" -> new DeleteItem();
             default -> new UnsupportedMethod();
         };
-        //------------------
-        //gives the exchange to the selected handler
         handler.handle(exchange);
     }
 }
