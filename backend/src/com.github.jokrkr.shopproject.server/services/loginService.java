@@ -1,6 +1,7 @@
 package com.github.jokrkr.shopproject.server.services;
 
 import com.github.jokrkr.shopproject.server.database.DatabaseConfig;
+import com.github.jokrkr.shopproject.server.models.Role;
 import com.github.jokrkr.shopproject.server.response.LoginResponse;
 
 import java.security.MessageDigest;
@@ -49,6 +50,21 @@ public class LoginService {
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error hashing password", e);
+        }
+    }
+
+    public Role getRole(String username) throws SQLException {
+        String query = "SELECT role FROM users WHERE username = ?";
+        try (PreparedStatement ps = conn.prepareStatement(query)) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                String roleString = rs.getString("role");
+                return Role.valueOf(roleString.toUpperCase()); // Assuming role names match the enum
+            } else {
+                throw new SQLException("User not found");
+            }
         }
     }
 
