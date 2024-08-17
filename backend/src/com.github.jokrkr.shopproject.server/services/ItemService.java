@@ -6,8 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
-public class itemService {
-    private static final Logger logger = LoggerFactory.getLogger(itemService.class);
+public class ItemService {
+    private static final Logger logger = LoggerFactory.getLogger(ItemService.class);
     private final Connection conn;
     private static final String SELECT_SQL = "SELECT id, quantity FROM items WHERE type = ? AND name = ? AND price = ?";
     private static final String UPDATE_SQL = "UPDATE items SET quantity = quantity + ? WHERE id = ?";
@@ -16,7 +16,7 @@ public class itemService {
 
     //------------------------
     // establishes connection to the database
-    public itemService() throws SQLException {
+    public ItemService() throws SQLException {
         this.conn = DatabaseConfig.getConnection("inventory");
     }
 
