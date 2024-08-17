@@ -1,8 +1,8 @@
 package com.github.jokrkr.shopproject.server;
 
-import com.github.jokrkr.shopproject.server.requestHandler.ItemHandler;
-import com.github.jokrkr.shopproject.server.requestHandler.UserHandler;
-import com.github.jokrkr.shopproject.server.requestHandler.LoginHandler;
+import com.github.jokrkr.shopproject.server.handlers.ItemHandler;
+import com.github.jokrkr.shopproject.server.handlers.UserHandler;
+import com.github.jokrkr.shopproject.server.handlers.LoginHandler;
 import com.sun.net.httpserver.HttpServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
