@@ -1,59 +1,32 @@
 package com.github.jokrkr.shopproject.server.CRUD.Item;
 
 import com.github.jokrkr.shopproject.server.models.Item;
-import com.github.jokrkr.shopproject.server.services.itemService;
-import com.google.gson.Gson;
+import com.github.jokrkr.shopproject.server.response.ResponseUtil;
+import com.github.jokrkr.shopproject.server.services.ItemService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLException;
+
+import static com.github.jokrkr.shopproject.server.Utility.ParsingUtility.parseItem;
 
 public class UpdateItem implements HttpHandler {
-    private final com.github.jokrkr.shopproject.server.services.itemService itemService;
-
-    public UpdateItem() {
-        try {
-            itemService = new itemService();
-        } catch (SQLException e) {
-            throw new RuntimeException("Error initializing ItemService", e);
-        }
-    }
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         try {
-            Gson gson = new Gson();
-            Item item = gson.fromJson(
-                    new InputStreamReader(
-                            exchange.getRequestBody(),
-                            StandardCharsets.UTF_8),
-                    Item.class);
-
+            ItemService itemService = new ItemService();
+            Item item = parseItem(exchange);
             itemService.addItem(
                     item.getType(),
                     item.getName(),
                     item.getPrice(),
                     item.getQuantity());
 
-            sendResponse(exchange, 200, "Item updated successfully");
-
+            ResponseUtil.sendResponse(exchange,200, "Item updated successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            sendResponse(exchange, 500, "Internal Server Error");
-        }
-    }
-
-    //------------------------
-    //
-    private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
-        exchange.getResponseHeaders().add("Content-Type", "application/json");
-        exchange.sendResponseHeaders(statusCode, response.getBytes(StandardCharsets.UTF_8).length);
-        try (OutputStream os = exchange.getResponseBody()) {
-            os.write(response.getBytes(StandardCharsets.UTF_8));
+            ResponseUtil.sendResponse(exchange,500, "Internal Server Error");
         }
     }
 }
