@@ -25,9 +25,9 @@ public class userService {
         String query = "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
             ps.setString(1, newUser.getUserName());
-            ps.setString(2, newUser.getPassword());  // Ensure this is the hashed password
-            ps.setString(3, newUser.getRole().toString());  // Assuming Role is an enum
-            ps.executeUpdate();  // Use executeUpdate for INSERT, UPDATE, DELETE
+            ps.setString(2, newUser.getPassword());
+            ps.setString(3, newUser.getRole().toString());
+            ps.executeUpdate();
         }
     }
 
@@ -47,7 +47,7 @@ public class userService {
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0; //returns 1 if a user was deleted and 0 of not
+            return affectedRows > 0; //returns 1 if a user was deleted and 0 of not //todo consider another form of feedback
         }
     }
 
