@@ -7,6 +7,7 @@ import com.github.jokrkr.shopproject.server.CRUD.Users.ReadUser;
 import com.github.jokrkr.shopproject.server.CRUD.Users.UpdateUserPassword;
 import com.github.jokrkr.shopproject.server.auth.AuthenticationUtil;
 import com.github.jokrkr.shopproject.server.models.Session;
+import com.github.jokrkr.shopproject.server.response.ResponseUtil;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -27,14 +28,14 @@ public class UserHandler implements HttpHandler {
             case "GET" -> new ReadUser();
             case "PUT" -> {
                 if (!("moderator".equals(session.getRole()) || "admin".equals(session.getRole()))) {
-                        AuthenticationUtil.sendResponse(exchange, 403, "Forbidden: Moderator or higher access required");
+                    ResponseUtil.sendResponse(exchange, 403, "Forbidden: Moderator or higher access required");
                     yield null;
                 }
                 yield new UpdateUserPassword();
             }
             case "POST", "DELETE" -> {
                 if (!"admin".equals(session.getRole())) {
-                    AuthenticationUtil.sendResponse(exchange, 403, "Forbidden: Admin access required");
+                    ResponseUtil.sendResponse(exchange, 403, "Forbidden: Admin access required");
                     yield null;
                 }
                 yield switch (method) {
