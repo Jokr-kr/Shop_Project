@@ -7,6 +7,7 @@ import com.github.jokrkr.shopproject.server.CRUD.Item.DeleteItem;
 import com.github.jokrkr.shopproject.server.CRUD.UnsupportedMethod;
 import com.github.jokrkr.shopproject.server.auth.AuthenticationUtil;
 import com.github.jokrkr.shopproject.server.models.Session;
+import com.github.jokrkr.shopproject.server.response.ResponseUtil;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
@@ -28,7 +29,8 @@ public class ItemHandler implements HttpHandler {
             case "DELETE" -> new DeleteItem();
             case "POST", "PUT" -> {
                 if (!"admin".equals(session.getRole()))
-                {AuthenticationUtil.sendResponse(exchange, 403, "Forbidden: Admin access required");
+                {
+                    ResponseUtil.sendResponse(exchange, 403, "Forbidden: Admin access required");
                     yield null;}
 
                 yield switch (method) {
@@ -40,7 +42,7 @@ public class ItemHandler implements HttpHandler {
             default -> new UnsupportedMethod();
         };
 
-        // Handle the exchange if the handler is not null
+
         if (handler != null) {
             handler.handle(exchange);
         }

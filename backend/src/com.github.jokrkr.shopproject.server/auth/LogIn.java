@@ -2,6 +2,7 @@ package com.github.jokrkr.shopproject.server.auth;
 
 import com.github.jokrkr.shopproject.server.Utility.ParsingUtility;
 import com.github.jokrkr.shopproject.server.models.User;
+import com.github.jokrkr.shopproject.server.response.ResponseUtil;
 import com.github.jokrkr.shopproject.server.services.LoginService;
 import com.github.jokrkr.shopproject.server.response.LoginResponse;
 import com.github.jokrkr.shopproject.server.handlers.SessionHandler;
@@ -12,8 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 
 public class LogIn implements HttpHandler {
@@ -53,6 +52,6 @@ public class LogIn implements HttpHandler {
     }
 
     private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
-        AuthenticationUtil.sendResponse(exchange, statusCode, response);
+        ResponseUtil.sendResponse(exchange, statusCode, response);
     }
 }
