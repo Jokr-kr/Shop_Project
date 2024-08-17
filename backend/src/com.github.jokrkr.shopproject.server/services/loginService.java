@@ -61,7 +61,7 @@ public class LoginService {
 
             if (rs.next()) {
                 String roleString = rs.getString("role");
-                return Role.valueOf(roleString.toUpperCase()); // Assuming role names match the enum
+                return Role.valueOf(roleString.toUpperCase());
             } else {
                 throw new SQLException("User not found");
             }
