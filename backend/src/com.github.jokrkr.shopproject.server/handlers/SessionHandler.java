@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class SessionHandler {
-    private static Map<String, Session> sessions = new HashMap<>();
+    private static final Map<String, Session> sessions = new HashMap<>();
 
     public static String createSession(String username, String role) {
         String sessionId = UUID.randomUUID().toString();
