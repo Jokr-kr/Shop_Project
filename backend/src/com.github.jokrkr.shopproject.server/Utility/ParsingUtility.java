@@ -52,7 +52,7 @@ public class ParsingUtility {
         }
     }
 
-    public static Item parseitem(HttpExchange exchange) throws IOException {
+    public static Item parseItem(HttpExchange exchange) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))) {
             StringBuilder rawJson = new StringBuilder();
             String line;
