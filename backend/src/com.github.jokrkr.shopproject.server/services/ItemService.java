@@ -76,6 +76,7 @@ public class itemService {
             throw e;
         }
     }
+
     //------------------------
     //setting up the item
     private ResultSet getItemResultSet(PreparedStatement stmt, String type, String name, double price) throws SQLException {
@@ -84,6 +85,7 @@ public class itemService {
         stmt.setDouble(3, price);
         return stmt.executeQuery();
     }
+
     //------------------------
     // checks if item exists in database
     private boolean itemExists(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
@@ -91,6 +93,7 @@ public class itemService {
             return rs.next();
         }
     }
+
     //------------------------
     //gets the item id from the database
     private int getItemId(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
@@ -101,6 +104,7 @@ public class itemService {
             throw new SQLException("Item not found");
         }
     }
+
     //------------------------
     //checks an item quantity
     private int getItemQuantity(PreparedStatement selectStmt, String type, String name, double price) throws SQLException {
@@ -111,6 +115,7 @@ public class itemService {
             throw new SQLException("Item not found");
         }
     }
+
     //------------------------
     //updates an item quantity
     private void updateItemQuantity(PreparedStatement updateStmt, int id, int quantity) throws SQLException {
@@ -118,6 +123,7 @@ public class itemService {
         updateStmt.setInt(2, id);
         updateStmt.executeUpdate();
     }
+
     //------------------------
     //adds a new item
     private void insertNewItem(PreparedStatement insertStmt, String type, String name, double price, int quantity) throws SQLException {
@@ -127,6 +133,7 @@ public class itemService {
         insertStmt.setInt(4, quantity);
         insertStmt.executeUpdate();
     }
+
     //------------------------
     //deletes an item
     private void deleteItem(PreparedStatement deleteStmt, int id) throws SQLException {
