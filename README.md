@@ -114,7 +114,7 @@ The JavaFX client allows you to:
 
 - **User Management**:
   - `POST /users`: Create a new user.
- 
+  - `DELETE /user` : Delete a user
 - **Item Management**:
   - `GET /items`: Retrieve a list of items.
   - `POST /items`: Create a new item.
