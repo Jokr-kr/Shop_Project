@@ -51,7 +51,7 @@ public class userService {
 
     //------------------------
     // retrieval of password hash
-    public ResultSet getpasswordhash(String username) throws SQLException {
+    public ResultSet getPasswordHash(String username) throws SQLException {
         String Query = "SELECT password_hash FROM users WHERE username = ?";
         PreparedStatement ps = conn.prepareStatement(Query);
         ps.setString(1, username);
@@ -60,7 +60,7 @@ public class userService {
 
     //------------------------
     // for changing password
-    public void updatepassword(User User) throws SQLException {
+    public void updatePassword(User User) throws SQLException {
 
         String Query = "update users set password_hash = ? where username = ?";
         PreparedStatement ps = conn.prepareStatement(Query);
