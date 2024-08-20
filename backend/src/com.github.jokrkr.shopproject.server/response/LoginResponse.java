@@ -2,14 +2,22 @@ package com.github.jokrkr.shopproject.server.response;
 
 public class LoginResponse {
 
-    private final String status;
-    private final String message;
-    private final int statusCode;
+    private String status;
+    private String message;
+    private int statusCode;
+    private String sessionId;
 
+    // Constructor for responses without sessionId
     public LoginResponse(String status, String message, int statusCode) {
         this.status = status;
         this.message = message;
         this.statusCode = statusCode;
+    }
+
+    // Constructor for responses with sessionId
+    public LoginResponse(String status, String message, int statusCode, String sessionId) {
+        this(status, message, statusCode); // Calls the other constructor
+        this.sessionId = sessionId;
     }
 
     public String getStatus() {
@@ -24,8 +32,12 @@ public class LoginResponse {
         return statusCode;
     }
 
-    public static LoginResponse success() {
-        return new LoginResponse("SUCCESS", "Login successful", 200);
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public static LoginResponse success(String sessionId) {
+        return new LoginResponse("SUCCESS", "Login successful", 200, sessionId);
     }
 
     public static LoginResponse usernameNotFound() {
@@ -39,5 +51,4 @@ public class LoginResponse {
     public static LoginResponse serverError() {
         return new LoginResponse("SERVER_ERROR", "An error occurred on the server", 500);
     }
-
 }
