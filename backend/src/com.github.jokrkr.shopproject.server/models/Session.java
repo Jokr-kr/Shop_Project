@@ -1,6 +1,5 @@
 package com.github.jokrkr.shopproject.server.models;
 
-// Session.java (New file)
 public class Session {
     private String username;
     private String role;

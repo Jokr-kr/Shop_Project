@@ -10,7 +10,6 @@ public enum Role {
     Role(int level) {
         this._level = level;
     }
-    public int getLevel() {return _level;}
 
-    public boolean permission(Role role) {return this._level >= role.getLevel();}
+    public int getLevel() {return _level;}
 }

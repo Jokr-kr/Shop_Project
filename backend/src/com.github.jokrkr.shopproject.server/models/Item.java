@@ -1,10 +1,6 @@
 package com.github.jokrkr.shopproject.server.models;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class Item {
-    private static final Logger logger = LoggerFactory.getLogger(Item.class);
 
     private final String _type;
     private final String _name;
