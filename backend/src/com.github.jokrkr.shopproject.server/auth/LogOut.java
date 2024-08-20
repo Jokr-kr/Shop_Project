@@ -14,23 +14,14 @@ public class LogOut implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        if ("POST".equalsIgnoreCase(exchange.getRequestMethod())) {
-            String sessionId = exchange.getRequestHeaders().getFirst("Session-ID");
+        String sessionId = exchange.getRequestHeaders().getFirst("Session-ID");
 
-            if (sessionId != null && SessionHandler.getSession(sessionId) != null) {
-                SessionHandler.removeSession(sessionId);
-
-                sendResponse(exchange, 200, "Logout successful");
-                logger.info("Session {} successfully logged out", sessionId);
-            } else {
-                sendResponse(exchange, 400, "Invalid session ID");
-            }
+        if (sessionId != null && SessionHandler.getSession(sessionId) != null) {
+            SessionHandler.removeSession(sessionId);
+            ResponseUtil.sendResponse(exchange, 200, "Logout successful");
+            logger.info("Session {} successfully logged out", sessionId);
         } else {
-            sendResponse(exchange, 405, "Method Not Allowed");
+            ResponseUtil.sendResponse(exchange, 400, "Invalid session ID");
         }
-    }
-
-    private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
-        ResponseUtil.sendResponse(exchange, statusCode, response);
     }
 }
