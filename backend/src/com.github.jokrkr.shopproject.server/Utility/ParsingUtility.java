@@ -77,7 +77,7 @@ public class ParsingUtility {
                 quantity,
                 value);
         ;
-        logger.info("Created user with fields: " + item);
+        logger.info("Created Item with fields: " + item);
 
         return item;
 
