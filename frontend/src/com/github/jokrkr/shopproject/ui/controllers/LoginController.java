@@ -31,7 +31,6 @@ public class LoginController {
 
         if (username.isEmpty() || password.isEmpty()) {
             loginResponse.setText("Username or password is incorrect");
-            loginResponse.setStyle("-fx-text-fill: red;");
             return;
         }
 
@@ -54,7 +53,6 @@ public class LoginController {
 
         } catch (Exception e) {
             loginResponse.setText("Failed to connect to the server.");
-            loginResponse.setStyle("-fx-text-fill: red;");
             e.printStackTrace();
         }
     }
