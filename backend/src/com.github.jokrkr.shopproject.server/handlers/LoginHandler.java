@@ -19,6 +19,5 @@ public class LoginHandler implements HttpHandler {
             default -> new UnsupportedMethod(); // ¯\_(ツ)_/¯
         };
         handler.handle(exchange);
-
     }
 }

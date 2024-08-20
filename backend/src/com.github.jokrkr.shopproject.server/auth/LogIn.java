@@ -20,34 +20,30 @@ public class LogIn implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-        if ("GET".equalsIgnoreCase(exchange.getRequestMethod())) {
-            LoginService loginService = null;
-            try {
-                loginService = new LoginService();
-                User user = ParsingUtility.parseUser(exchange);
+        LoginService loginService = null;
+        try {
+            loginService = new LoginService();
+            User user = ParsingUtility.parseUser(exchange);
 
-                String username = user.getUserName();
-                String password = user.getPassword();
+            String username = user.getUserName();
+            String password = user.getPassword();
 
-                LoginResponse response = loginService.authenticate(username, password);
+            LoginResponse response = loginService.authenticate(username, password);
 
-                sendResponse(exchange, response.getStatusCode(), response.getMessage());
+            sendResponse(exchange, response.getStatusCode(), response.getMessage());
 
-                if (response.getStatus().equals("SUCCESS")) {
-                    String sessionId = SessionHandler.createSession(username, "userRole");
-                    logger.info("User {} logged in successfully with session ID: {}", username, sessionId);
-                }
-
-            } catch (SQLException e) {
-                logger.error("Database error during login", e);
-                sendResponse(exchange, 500, "Internal Server Error");
-            } finally {
-                if (loginService != null) {
-                    loginService.close();
-                }
+            if (response.getStatus().equals("SUCCESS")) {
+                String sessionId = SessionHandler.createSession(username, "userRole");
+                logger.info("User {} logged in successfully with session ID: {}", username, sessionId);
             }
-        } else {
-            sendResponse(exchange, 405, "Method Not Allowed");
+
+        } catch (SQLException e) {
+            logger.error("Database error during login", e);
+            sendResponse(exchange, 500, "Internal Server Error");
+        } finally {
+            if (loginService != null) {
+                loginService.close();
+            }
         }
     }
 
