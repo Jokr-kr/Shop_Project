@@ -33,24 +33,14 @@ public class userService {
 
     //------------------------
     // user deletion
-    public boolean deleteUser(String adminUsername, String adminPassword, String username) throws SQLException {
-        LoginService access = new LoginService();
-        LoginResponse loginResponse = access.authenticate(adminUsername, adminPassword);
-        if (!"SUCCESS".equals(loginResponse.getStatus())) {
-            return false;
-        }
-        Role role = access.getRole(adminUsername);
-        if (role != Role.admin) {
-            return false;
-        }
+    public boolean deleteUser(String username) throws SQLException {
         String query = "DELETE FROM users WHERE username = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             int affectedRows = stmt.executeUpdate();
-            return affectedRows > 0; //returns 1 if a user was deleted and 0 of not //todo consider another form of feedback
+            return affectedRows > 0; // Returns true if a user was deleted, false otherwise
         }
     }
-
     //------------------------
     // retrieval of user data
     public ResultSet getUsers() throws SQLException {
