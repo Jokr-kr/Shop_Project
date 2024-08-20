@@ -1,6 +1,7 @@
 package com.github.jokrkr.shopproject.server.services;
 
 import com.github.jokrkr.shopproject.server.database.DatabaseConfig;
+import com.github.jokrkr.shopproject.server.handlers.SessionHandler;
 import com.github.jokrkr.shopproject.server.models.Role;
 import com.github.jokrkr.shopproject.server.response.LoginResponse;
 
@@ -29,13 +30,16 @@ public class LoginService {
                 String storedHash = rs.getString("password_hash");
                 String providedHash = hashPassword(password);
                 if (storedHash.equals(providedHash)) {
-                    return LoginResponse.success();
+                    String sessionId = SessionHandler.createSession(username, "userRole");
+                    return LoginResponse.success(sessionId);
                 } else {
                     return LoginResponse.incorrectPassword();
                 }
             } else {
                 return LoginResponse.usernameNotFound();
             }
+        } catch (SQLException e) {
+            return LoginResponse.serverError();
         }
     }
 
