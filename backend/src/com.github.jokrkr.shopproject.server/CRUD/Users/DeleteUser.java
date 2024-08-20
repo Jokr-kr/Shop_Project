@@ -1,7 +1,5 @@
 package com.github.jokrkr.shopproject.server.CRUD.Users;
 
-import com.github.jokrkr.shopproject.server.handlers.SessionHandler;
-import com.github.jokrkr.shopproject.server.models.Session;
 import com.github.jokrkr.shopproject.server.response.ResponseUtil;
 import com.github.jokrkr.shopproject.server.services.userService;
 import com.sun.net.httpserver.HttpExchange;
@@ -26,20 +24,6 @@ public class DeleteUser implements HttpHandler {
         userService userService = null;
 
         try {
-            String sessionId = exchange.getRequestHeaders().getFirst("Session-ID");
-            if (sessionId == null || SessionHandler.getSession(sessionId) == null) {
-                ResponseUtil.sendResponse(exchange, 401, "Unauthorized: Invalid session");
-                return;
-            }
-
-            Session session = SessionHandler.getSession(sessionId);
-            String userRole = session.getRole();
-
-            if (!"admin".equals(userRole)) {
-                ResponseUtil.sendResponse(exchange, 403, "Forbidden: Admin access required");
-                return;
-            }
-
             JsonObject requestBody = parser(exchange);
             String username = requestBody.has("username") ? requestBody.get("username").getAsString() : null;
 
