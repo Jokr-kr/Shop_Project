@@ -3,34 +3,32 @@ package com.github.jokrkr.shopproject.ui.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.fxml.FXMLLoader;
+
 import java.io.IOException;
 
 public class LoginController {
-
     @FXML
-    private Label loginStatusLabel;
-
-    // Call this method after a successful login
+    private TextField usernameField;
     @FXML
-    private void handleLogin() {
-        try {
-            // Load the main view
-            Parent root = FXMLLoader.load(getClass().getResource("/com/github/jokrkr/shopproject/ui/views/main_view.fxml"));
+    private PasswordField passwordField;
+    @FXML
+    private Label loginResponse;
 
-            // Get the current stage and set the new scene
-            Stage stage = (Stage) loginStatusLabel.getScene().getWindow();
-            stage.setScene(new Scene(root));
-            stage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
+
+    public void TryToLogIn(ActionEvent actionEvent) {
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        if (username.isEmpty() || password.isEmpty()) {
+            loginResponse.setText("username or password is incorrect");
+            return;
         }
-    }
-
-    public void TryToLoggIn(ActionEvent actionEvent) {
 
     }
 }
