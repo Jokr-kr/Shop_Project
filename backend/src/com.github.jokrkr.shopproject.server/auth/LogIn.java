@@ -30,7 +30,7 @@ public class LogIn implements HttpHandler {
 
             LoginResponse response = loginService.authenticate(username, password);
 
-            sendResponse(exchange, response.getStatusCode(), response.getMessage());
+            ResponseUtil.sendResponse(exchange, response.getStatusCode(), response.getMessage());
 
             if (response.getStatus().equals("SUCCESS")) {
                 String sessionId = SessionHandler.createSession(username, "userRole");
@@ -39,15 +39,11 @@ public class LogIn implements HttpHandler {
 
         } catch (SQLException e) {
             logger.error("Database error during login", e);
-            sendResponse(exchange, 500, "Internal Server Error");
+            ResponseUtil.sendResponse(exchange, 500, "Internal Server Error");
         } finally {
             if (loginService != null) {
                 loginService.close();
             }
         }
-    }
-
-    private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
-        ResponseUtil.sendResponse(exchange, statusCode, response);
     }
 }
