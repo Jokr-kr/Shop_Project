@@ -14,6 +14,8 @@ public class User {
         this._role = Role;
     }
 
+    //todo consider adding salt to the hashing process
+
     private String HashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
