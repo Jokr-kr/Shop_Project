@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.sql.SQLException;
 
+//todo -- consider setting up https
+
 public class ServerApp {
     private static final Logger logger = LoggerFactory.getLogger(ServerApp.class);
 
