@@ -1,5 +1,7 @@
 package com.github.jokrkr.shopproject.server.CRUD.Users;
 
+import com.github.jokrkr.shopproject.server.handlers.SessionHandler;
+import com.github.jokrkr.shopproject.server.models.Session;
 import com.github.jokrkr.shopproject.server.response.ResponseUtil;
 import com.github.jokrkr.shopproject.server.services.userService;
 import com.sun.net.httpserver.HttpExchange;
@@ -24,28 +26,37 @@ public class DeleteUser implements HttpHandler {
         userService userService = null;
 
         try {
+            String sessionId = exchange.getRequestHeaders().getFirst("Session-ID");
+            if (sessionId == null || SessionHandler.getSession(sessionId) == null) {
+                ResponseUtil.sendResponse(exchange, 401, "Unauthorized: Invalid session");
+                return;
+            }
+
+            Session session = SessionHandler.getSession(sessionId);
+            String userRole = session.getRole();
+
+            if (!"admin".equals(userRole)) {
+                ResponseUtil.sendResponse(exchange, 403, "Forbidden: Admin access required");
+                return;
+            }
 
             JsonObject requestBody = parser(exchange);
+            String username = requestBody.has("username") ? requestBody.get("username").getAsString() : null;
 
-            String adminUsername = getStringFromJson(requestBody, "adminUsername");
-            String adminPassword = getStringFromJson(requestBody, "adminPassword");
-            String username = getStringFromJson(requestBody, "username");
-
-            if (adminUsername == null || adminPassword == null || username == null) {
+            if (username == null) {
                 ResponseUtil.sendResponse(exchange, 400, "Missing required fields");
                 return;
             }
 
             userService = new userService();
-
-            boolean success = userService.deleteUser(adminUsername, adminPassword, username);
+            boolean success = userService.deleteUser(username);
 
             if (success) {
                 ResponseUtil.sendResponse(exchange, 200, "User deleted successfully");
                 logger.info("User deleted successfully: {}", username);
             } else {
-                ResponseUtil.sendResponse(exchange, 403, "Unauthorized action or user not found");
-                logger.info("Unauthorized attempt to delete user: {}", username);
+                ResponseUtil.sendResponse(exchange, 404, "User not found");
+                logger.info("Attempt to delete non-existing user: {}", username);
             }
 
         } catch (SQLException e) {
@@ -59,9 +70,5 @@ public class DeleteUser implements HttpHandler {
                 userService.close();
             }
         }
-    }
-
-    private String getStringFromJson(JsonObject object, String key) {
-        return object.has(key) ? object.get(key).getAsString() : null;
     }
 }
