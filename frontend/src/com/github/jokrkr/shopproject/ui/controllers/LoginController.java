@@ -4,6 +4,7 @@ import com.github.jokrkr.shopproject.state.Session;
 import com.github.jokrkr.shopproject.utils.PasswordHasher;
 import com.github.jokrkr.shopproject.utils.ResponseParser;
 
+import com.github.jokrkr.shopproject.utils.SceneChanger;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.Label;
@@ -60,7 +61,7 @@ public class LoginController {
 
                 loginResponse.setText("Login successful!");
 
-           //todo  handleResponse(responseCode, response);
+                SceneChanger.changeScene(loginResponse, "/com/github/jokrkr/shopproject/ui/views/main_view.fxml");
 
             } else {
                 String errorMessage = responseJson.has("message") ? responseJson.getString("message") : "An unknown error occurred.";
