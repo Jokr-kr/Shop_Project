@@ -18,6 +18,7 @@ public class MainController {
             contentPane.getChildren().setAll(pane);
         } catch (IOException e) {
             e.printStackTrace();
+            //todo better exception handling needed
         }
     }
 
