@@ -12,6 +12,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.json.JSONObject;
 
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
@@ -29,8 +30,6 @@ public class LoginController {
     @FXML
     private Label loginResponse;
 
-    //todo add login-attempts and a lockout.
-
     public void TryToLogIn() {
         String username = usernameField.getText();
         String password = passwordField.getText();
@@ -43,14 +42,20 @@ public class LoginController {
         try {
             String hashedPassword = PasswordHasher.hashPassword(password);
 
-            String encodedUsername = URLEncoder.encode(username, StandardCharsets.UTF_8);
-            String encodedPassword = URLEncoder.encode(hashedPassword, StandardCharsets.UTF_8);
+            JSONObject jsonPayload = new JSONObject();
+            jsonPayload.put("username", username);
+            jsonPayload.put("password", hashedPassword);
 
-            URI uri = new URI(String.format("http://localhost:8080/login?username=%s&password=%s", encodedUsername, encodedPassword));
-            URL url = uri.toURL();
-
+            URL url = new URL("http://localhost:8080/login");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json; utf-8");
+            connection.setDoOutput(true);
+
+            try (OutputStream os = connection.getOutputStream()) {
+                byte[] input = jsonPayload.toString().getBytes(StandardCharsets.UTF_8);
+                os.write(input, 0, input.length);
+            }
 
             int responseCode = connection.getResponseCode();
             JSONObject responseJson = ResponseParser.parseResponse(connection);
@@ -60,16 +65,13 @@ public class LoginController {
                 Session.getInstance().setSessionId(sessionId);
 
                 loginResponse.setText("Login successful!");
-
                 SceneChanger.changeScene(loginResponse, "/com/github/jokrkr/shopproject/ui/views/main_view.fxml");
-
             } else {
                 String errorMessage = responseJson.has("message") ? responseJson.getString("message") : "An unknown error occurred.";
                 loginResponse.setText("Error: " + errorMessage);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            //todo better exception handling needed
             loginResponse.setText("An error occurred during login.");
         }
     }
