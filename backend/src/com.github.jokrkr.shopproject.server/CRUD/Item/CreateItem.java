@@ -1,10 +1,10 @@
 package com.github.jokrkr.shopproject.server.CRUD.Item;
 
 import com.github.jokrkr.shopproject.server.models.Item;
-import com.github.jokrkr.shopproject.server.response.ResponseUtil;
 import com.github.jokrkr.shopproject.server.services.ItemService;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
+import com.github.jokrkr.shopproject.server.response.ResponseUtil;
+import com.github.jokrkr.shopproject.server.Utility.ParsingUtility;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.slf4j.Logger;
@@ -13,18 +13,18 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.sql.SQLException;
 
-import static com.github.jokrkr.shopproject.server.Utility.ParsingUtility.parseItem;
+
 
 public class CreateItem implements HttpHandler {
     private static final Logger logger = LoggerFactory.getLogger(CreateItem.class);
-    private final Gson gson = new Gson();
+
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         ItemService itemService = null;
         try {
             itemService = new ItemService();
-            Item item = parseItem(exchange);
+            Item item = ParsingUtility.parseItem(exchange);
 
             validateItem(item);
 
@@ -36,9 +36,7 @@ public class CreateItem implements HttpHandler {
 
             logger.info("Item created successfully: {}", item.getName());
             ResponseUtil.sendResponse(exchange, 200, "Item created successfully");
-        } catch (JsonSyntaxException e) {
-            logger.error("Invalid JSON format", e);
-            ResponseUtil.sendResponse(exchange, 400, "Invalid JSON format");
+
         } catch (IllegalArgumentException e) {
             logger.error("Invalid input data", e);
             ResponseUtil.sendResponse(exchange, 400, "Invalid input data");
