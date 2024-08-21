@@ -9,14 +9,11 @@ public class DatabaseConfig {
     private static final String USER = System.getenv("DATABASE_USERNAME");
     private static final String PASSWORD = System.getenv("DATABASE_PASSWORD");
 
-
-    public static Connection getConnection(String dbName) throws SQLException {
-        System.out.println(BASE_URL + "/" + dbName + USER + " " + PASSWORD + " database connection");
+    public static Connection getConnection() throws SQLException {
         if (BASE_URL == null || USER == null || PASSWORD == null) {
             throw new IllegalStateException("Database environment variables not set");
-
         }
-        String fullUrl = BASE_URL + "/" + dbName;
-        return DriverManager.getConnection(fullUrl, USER, PASSWORD);
+
+        return DriverManager.getConnection(BASE_URL, USER, PASSWORD);
     }
 }

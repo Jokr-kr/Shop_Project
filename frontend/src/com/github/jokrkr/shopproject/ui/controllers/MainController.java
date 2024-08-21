@@ -32,5 +32,4 @@ public class MainController {
     @FXML
     public void showPage4() {loadPage("/com/github/jokrkr/shopproject/ui/views/LoginView.fxml");}
 
-
 }

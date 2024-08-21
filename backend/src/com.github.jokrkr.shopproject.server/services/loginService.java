@@ -17,7 +17,7 @@ public class LoginService {
     private final Connection conn;
 
     public LoginService() throws SQLException {
-        this.conn = DatabaseConfig.getConnection("users");
+        this.conn = DatabaseConfig.getConnection();
     }
 
     public LoginResponse authenticate(String username, String password) throws SQLException {

@@ -69,6 +69,7 @@ public class LoginController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            //todo better exception handling needed
             loginResponse.setText("An error occurred during login.");
         }
     }

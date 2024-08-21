@@ -15,7 +15,7 @@ public class userService {
     //------------------------
     // establishes connection to the database
     public userService() throws SQLException {
-        this.conn = DatabaseConfig.getConnection("users");
+        this.conn = DatabaseConfig.getConnection();
     }
 
     //------------------------
