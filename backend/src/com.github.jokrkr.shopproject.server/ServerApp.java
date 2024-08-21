@@ -17,8 +17,7 @@ public class ServerApp {
     private static final Logger logger = LoggerFactory.getLogger(ServerApp.class);
 
     public static void main(String[] args) throws IOException, SQLException {
-        // creating the address for the server
-        InetSocketAddress address = new InetSocketAddress("127.0.0.1", 8080);
+        InetSocketAddress address = new InetSocketAddress("127.0.0.1", 8080); //todo this can be changed based on personal preferences
         // creating server
         HttpServer server = HttpServer.create(address, 0); // reminder backlog is related to amount of incoming requests
 

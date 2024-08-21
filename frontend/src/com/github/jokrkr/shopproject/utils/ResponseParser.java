@@ -9,7 +9,6 @@ import java.net.HttpURLConnection;
 
 public class ResponseParser {
 
-    // Method to read the response from the HttpURLConnection and return a JSONObject
     public static JSONObject parseResponse(HttpURLConnection connection) throws IOException {
         BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
         StringBuilder response = new StringBuilder();
