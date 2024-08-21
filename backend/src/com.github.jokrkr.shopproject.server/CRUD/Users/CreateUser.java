@@ -20,35 +20,43 @@ public class CreateUser implements HttpHandler {
 
     @Override
     public void handle(HttpExchange exchange) throws IOException {
-
-        User user = ParsingUtility.parseUser(exchange);
-        userService userService = null;
+        logger.info("Handling user creation request");
 
         try {
-            userService = new userService();
+            // Log the incoming request details
+            logger.info("Request method: {}, URI: {}", exchange.getRequestMethod(), exchange.getRequestURI());
 
+            // Parse user details
+            User user = ParsingUtility.parseUser(exchange);
+            logger.info("Parsed user: username={}, role={}", user.getUserName(), user.getRole());
+
+            // Validate user input
             validateUser(user);
-            userService.createUser(user);
+            logger.info("User validated: username={}", user.getUserName());
 
+            // Create the user in the database
+            try (userService userService = new userService()) {
+                logger.info("Starting user creation in the database...");
+                userService.createUser(user);
+                logger.info("User creation completed for username={}", user.getUserName());
+            }
+
+            // Send success response
             ResponseUtil.sendResponse(exchange, 200, "User created successfully");
-            logger.info("User created successfully: {}", user.getUserName());
         } catch (SQLException e) {
-            logger.error("Database error creating user", e);
+            // Log database errors
+            logger.error("Database error during user creation", e);
             ResponseUtil.sendResponse(exchange, 500, "Internal Server Error");
         } catch (Exception e) {
-            logger.error("Error creating user", e);
+            // Log other errors
+            logger.error("Error during user creation", e);
             ResponseUtil.sendResponse(exchange, 500, "Internal Server Error");
-        } finally {
-            if (userService != null) {
-                userService.close();
-            }
         }
     }
-    //------------------------
-    //
+
     private void validateUser(User user) {
         if (user.getUserName() == null || user.getPassword() == null || user.getRole() == null) {
             throw new IllegalArgumentException("Invalid input data");
         }
     }
- }
+}
