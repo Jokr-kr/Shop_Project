@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
-public class userService {
+public class userService implements AutoCloseable {
     private static final Logger logger = LoggerFactory.getLogger(userService.class);
     private final Connection conn;
 
@@ -23,13 +23,19 @@ public class userService {
     public void createUser(User newUser) throws SQLException {
         String query = "INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)";
         try (PreparedStatement ps = conn.prepareStatement(query)) {
+            logger.info("Attempting to create user: username={}, role={}", newUser.getUserName(), newUser.getRole());
+
             ps.setString(1, newUser.getUserName());
             ps.setString(2, newUser.getPassword());
             ps.setString(3, newUser.getRole().toString());
+
             ps.executeUpdate();
+            logger.info("User created successfully: username={}", newUser.getUserName());
+        } catch (SQLException e) {
+            logger.error("Failed to create user: username={}", newUser.getUserName(), e);
+            throw e;
         }
     }
-
     //------------------------
     // user deletion
     public boolean deleteUser(String username) throws SQLException {
