@@ -20,15 +20,17 @@ public class ParsingUtility {
     private static final Logger logger = Logger.getLogger(ParsingUtility.class.getName());
 
     public static User parseUser(HttpExchange exchange) throws IOException {
-
         JsonObject object = parser(exchange);
 
         String userName = "Default";
         String password = "Default";
         Role role = regular;
 
-        if (object.has("userName")) {
-            userName = object.get("userName").getAsString();
+        // Log the received JSON for debugging purposes
+        logger.info("Received JSON: " + object.toString());
+
+        if (object.has("username")) {  // Updated to match the expected key in JSON
+            userName = object.get("username").getAsString();
         }
         if (object.has("password")) {
             password = object.get("password").getAsString();
@@ -44,9 +46,7 @@ public class ParsingUtility {
         return user;
     }
 
-
     public static Item parseItem(HttpExchange exchange) throws IOException {
-
         JsonObject object = parser(exchange);
 
         String type = "Default";
@@ -54,6 +54,9 @@ public class ParsingUtility {
         double price = 0;
         int quantity = 0;
         double value = 0;
+
+        // Log the received JSON for debugging purposes
+        logger.info("Received JSON: " + object.toString());
 
         if (object.has("type")) {
             type = object.get("type").getAsString();
@@ -70,17 +73,10 @@ public class ParsingUtility {
         if (object.has("value")) {
             value = object.get("value").getAsDouble();
         }
-        Item item = new Item(
-                type,
-                name,
-                price,
-                quantity,
-                value);
-        ;
+        Item item = new Item(type, name, price, quantity, value);
         logger.info("Created Item with fields: " + item);
 
         return item;
-
     }
 
     public static JsonObject parser(HttpExchange exchange) throws IOException {
@@ -91,6 +87,8 @@ public class ParsingUtility {
                 rawJson.append(line);
             }
             String jsonString = rawJson.toString();
+
+            logger.info("Raw JSON received: " + jsonString);  // Log raw JSON for debugging
 
             return JsonParser.parseString(jsonString).getAsJsonObject();
         }
