@@ -28,8 +28,8 @@ public class LoginService {
 
             if (rs.next()) {
                 String storedHash = rs.getString("password_hash");
-                String providedHash = hashPassword(password);
-                if (storedHash.equals(providedHash)) {
+
+                if (storedHash.equals(password)) {
                     String sessionId = SessionHandler.createSession(username, "userRole");
                     return LoginResponse.success(sessionId);
                 } else {
