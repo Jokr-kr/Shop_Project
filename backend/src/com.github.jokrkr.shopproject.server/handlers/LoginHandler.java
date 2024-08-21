@@ -14,7 +14,7 @@ public class LoginHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         String method = exchange.getRequestMethod();
         HttpHandler handler = switch (method) {
-            case "GET" -> new LogIn() ;
+            case "POST" -> new LogIn() ;
             case "DELETE" -> new LogOut();
             default -> new UnsupportedMethod(); // ¯\_(ツ)_/¯
         };
