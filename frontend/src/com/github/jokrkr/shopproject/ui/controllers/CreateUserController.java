@@ -57,6 +57,7 @@ public class CreateUserController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            //todo better exception handling
             creationResponse.setText("An error occurred during user creation.");
         }
     }
