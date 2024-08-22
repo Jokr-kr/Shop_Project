@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import org.json.JSONObject;
 
 public class LoginController {
@@ -22,6 +23,22 @@ public class LoginController {
     @FXML
     private Label loginResponse;
 
+    @FXML
+    public void initialize() {
+        usernameField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                TryToLogIn();
+            }
+        });
+
+        passwordField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                TryToLogIn();
+            }
+        });
+    }
+
+
     public void TryToLogIn() {
         String username = usernameField.getText();
         String password = passwordField.getText();
@@ -30,7 +47,6 @@ public class LoginController {
             loginResponse.setText("Username and/or password is empty");
             return;
         }
-
         try {
             String hashedPassword = PasswordHasher.hashPassword(password);
             JSONObject loginJson = JsonFactory.createLoginJson(username, hashedPassword);
@@ -56,5 +72,4 @@ public class LoginController {
             loginResponse.setText("An error occurred during login.");
         }
     }
-
 }
