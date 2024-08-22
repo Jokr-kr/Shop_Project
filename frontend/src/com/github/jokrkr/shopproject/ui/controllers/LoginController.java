@@ -2,22 +2,14 @@ package com.github.jokrkr.shopproject.ui.controllers;
 
 import com.github.jokrkr.shopproject.state.Session;
 import com.github.jokrkr.shopproject.utils.PasswordHasher;
-import com.github.jokrkr.shopproject.utils.ResponseParser;
-
 import com.github.jokrkr.shopproject.utils.SceneChanger;
+import com.github.jokrkr.shopproject.utils.ServerCommunication;
+import com.github.jokrkr.shopproject.utils.JsonFactory;
 import javafx.fxml.FXML;
-
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import org.json.JSONObject;
-
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 public class LoginController {
 
@@ -41,26 +33,14 @@ public class LoginController {
 
         try {
             String hashedPassword = PasswordHasher.hashPassword(password);
+            JSONObject loginJson = JsonFactory.createLoginJson(username, hashedPassword);
 
-            JSONObject jsonPayload = new JSONObject();
-            jsonPayload.put("username", username);
-            jsonPayload.put("password", hashedPassword);
+            String response = ServerCommunication.sendRequest("POST", "/login", null, loginJson);
+            JSONObject responseJson = new JSONObject(response);
 
-            URL url = new URL("http://localhost:8080/login");
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json; utf-8");
-            connection.setDoOutput(true);
+            String status = responseJson.getString("status");
 
-            try (OutputStream os = connection.getOutputStream()) {
-                byte[] input = jsonPayload.toString().getBytes(StandardCharsets.UTF_8);
-                os.write(input, 0, input.length);
-            }
-
-            int responseCode = connection.getResponseCode();
-            JSONObject responseJson = ResponseParser.parseResponse(connection);
-
-            if (responseCode == 200) {
+            if ("SUCCESS".equalsIgnoreCase(status)) {
                 String sessionId = responseJson.getString("sessionId");
                 Session.getInstance().setSessionId(sessionId);
 
@@ -72,8 +52,9 @@ public class LoginController {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            //todo better exception handling
+            // todo better exception handling
             loginResponse.setText("An error occurred during login.");
         }
     }
+
 }
