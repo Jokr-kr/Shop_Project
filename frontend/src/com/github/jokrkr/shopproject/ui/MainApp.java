@@ -20,7 +20,7 @@ public class MainApp extends Application {
             primaryStage.setMaximized(true);
             primaryStage.show();
 
-            primaryStage.setFullScreen(true);
+            primaryStage.setFullScreen(false);
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();

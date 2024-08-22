@@ -22,7 +22,6 @@ public class MainController {
         }
     }
 
-    //list of available pages
     @FXML
     public void showPage1() {loadPage("/com/github/jokrkr/shopproject/ui/views/Page1.fxml");}
     @FXML

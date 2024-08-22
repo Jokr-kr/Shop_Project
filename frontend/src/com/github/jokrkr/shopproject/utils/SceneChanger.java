@@ -8,16 +8,15 @@ import javafx.stage.Stage;
 
 public class SceneChanger {
 
-
-    public static void changeScene(Control control, String fxmlFilePath) {
+    public static void changeScene(Control control, String fxmlFile) {
         try {
-            Parent root = FXMLLoader.load(SceneChanger.class.getResource(fxmlFilePath));
 
-            Stage stage = (Stage) control.getScene().getWindow();
+            Scene currentScene = control.getScene();
 
-            Scene scene = new Scene(root);
-            stage.setScene(scene);
-            stage.show();
+            Parent newRoot = FXMLLoader.load(SceneChanger.class.getResource(fxmlFile));
+
+            currentScene.setRoot(newRoot);
+
         } catch (Exception e) {
             e.printStackTrace();
            //todo better exception handling needed
