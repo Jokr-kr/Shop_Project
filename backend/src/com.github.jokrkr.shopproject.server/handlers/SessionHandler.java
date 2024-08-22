@@ -11,7 +11,7 @@ public class SessionHandler {
 
     public static String createSession(String username, String role) {
         String sessionId = UUID.randomUUID().toString();
-        Session session = new Session(username, role);  // Use the Session class from models
+        Session session = new Session(username, role);
         sessions.put(sessionId, session);
         return sessionId;
     }
