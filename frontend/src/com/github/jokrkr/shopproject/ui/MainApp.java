@@ -16,7 +16,6 @@ public class MainApp extends Application {
             primaryStage.setTitle("Login");
             primaryStage.setScene(new Scene(root));
 
-            // application opens and is set to maximized, then put into fullscreen
             primaryStage.setMaximized(true);
             primaryStage.show();
 
@@ -24,6 +23,7 @@ public class MainApp extends Application {
             primaryStage.show();
         } catch (Exception e) {
             e.printStackTrace();
+            //todo better exception handling
         }
     }
 
