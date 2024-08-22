@@ -15,6 +15,7 @@ public class LogOut implements HttpHandler {
     @Override
     public void handle(HttpExchange exchange) throws IOException {
         String sessionId = exchange.getRequestHeaders().getFirst("Session-ID");
+        logger.info("Received logout request with Session ID: {}", sessionId);
 
         if (sessionId != null && SessionHandler.getSession(sessionId) != null) {
             SessionHandler.removeSession(sessionId);
