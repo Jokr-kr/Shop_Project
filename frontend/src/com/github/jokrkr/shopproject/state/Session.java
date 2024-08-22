@@ -2,7 +2,7 @@ package com.github.jokrkr.shopproject.state;
 
 public class Session {
     private static Session instance;
-    private String sessionId;
+    private static String sessionId;
 
     private Session() {}
 
@@ -13,15 +13,15 @@ public class Session {
         return instance;
     }
 
-    public String getSessionId() {
+    public static String getSessionId() {
         return sessionId;
     }
 
     public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+        Session.sessionId = sessionId;
     }
 
-    public void clearSession() {
-        this.sessionId = null;
+    public static void clear() {
+        sessionId = null;
     }
 }
