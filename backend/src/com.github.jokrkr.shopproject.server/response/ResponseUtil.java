@@ -10,10 +10,14 @@ import java.nio.charset.StandardCharsets;
 public class ResponseUtil {
     public static void sendResponse(HttpExchange exchange, int statusCode, JSONObject response) throws IOException {
         String responseString = response.toString();
+        sendResponse(exchange, statusCode, responseString);
+    }
+
+    public static void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
         exchange.getResponseHeaders().add("Content-Type", "application/json");
-        exchange.sendResponseHeaders(statusCode, responseString.getBytes(StandardCharsets.UTF_8).length);
+        exchange.sendResponseHeaders(statusCode, response.getBytes(StandardCharsets.UTF_8).length);
         try (OutputStream os = exchange.getResponseBody()) {
-            os.write(responseString.getBytes(StandardCharsets.UTF_8));
+            os.write(response.getBytes(StandardCharsets.UTF_8));
         }
     }
 }
