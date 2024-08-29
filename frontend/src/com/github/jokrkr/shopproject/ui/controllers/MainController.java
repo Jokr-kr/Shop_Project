@@ -4,8 +4,8 @@ import com.github.jokrkr.shopproject.state.Session;
 import com.github.jokrkr.shopproject.utils.SceneChanger;
 import com.github.jokrkr.shopproject.utils.ServerCommunication;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
+import javafx.scene.control.Button;
 
 public class MainController {
     @FXML
