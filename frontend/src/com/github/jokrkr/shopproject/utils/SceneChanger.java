@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 
 public class SceneChanger {
 
+
     public static void changeScene(Node node, String fxmlFile) {
         try {
             Scene currentScene = node.getScene();

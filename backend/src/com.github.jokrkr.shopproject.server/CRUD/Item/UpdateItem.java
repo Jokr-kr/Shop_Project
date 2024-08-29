@@ -26,6 +26,7 @@ public class UpdateItem implements HttpHandler {
             ResponseUtil.sendResponse(exchange,200, "Item updated successfully");
         } catch (Exception e) {
             e.printStackTrace();
+            //todo better exception handling
             ResponseUtil.sendResponse(exchange,500, "Internal Server Error");
         }
     }

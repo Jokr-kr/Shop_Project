@@ -26,10 +26,10 @@ public class ParsingUtility {
         String password = "Default";
         Role role = regular;
 
-        // Log the received JSON for debugging purposes
+        // Log JSON for debugging
         logger.info("Received JSON: " + object.toString());
 
-        if (object.has("username")) {  // Updated to match the expected key in JSON
+        if (object.has("username")) {
             userName = object.get("username").getAsString();
         }
         if (object.has("password")) {
@@ -55,7 +55,7 @@ public class ParsingUtility {
         int quantity = 0;
         double value = 0;
 
-        // Log the received JSON for debugging purposes
+        // Log JSON for debugging
         logger.info("Received JSON: " + object.toString());
 
         if (object.has("type")) {
@@ -88,7 +88,7 @@ public class ParsingUtility {
             }
             String jsonString = rawJson.toString();
 
-            logger.info("Raw JSON received: " + jsonString);  // Log raw JSON for debugging
+            logger.info("Raw JSON received: " + jsonString);  // Log JSON for debugging
 
             return JsonParser.parseString(jsonString).getAsJsonObject();
         }

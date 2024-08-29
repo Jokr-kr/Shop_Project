@@ -49,12 +49,15 @@ public class ServerCommunication {
 
         } catch (IOException e) {
             e.printStackTrace();
+            //todo better exception handling
             throw new RuntimeException("Network error occurred: " + e.getMessage());
         } catch (InterruptedException e) {
             e.printStackTrace();
+            //todo better exception handling
             throw new RuntimeException("Request was interrupted: " + e.getMessage());
         } catch (Exception e) {
             e.printStackTrace();
+            //todo better exception handling
             throw new RuntimeException("An error occurred: " + e.getMessage());
         }
     }
