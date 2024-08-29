@@ -22,7 +22,7 @@
                 <Button prefHeight="40" prefWidth="100" text="Page 1" onAction="#showPage1"/>
                 <Button prefHeight="40" prefWidth="100" text="Page 2" onAction="#showPage2"/>
                 <Button prefHeight="40" prefWidth="100" text="Page 3" onAction="#showPage3"/>
-                <Button prefHeight="40" prefWidth="100" text="Page 4" onAction="#showPage4"/>
+                <Button prefHeight="40" prefWidth="100" text="Manage" onAction="#showManage"/>
             </HBox>
 
             <Region HBox.hgrow="ALWAYS" />

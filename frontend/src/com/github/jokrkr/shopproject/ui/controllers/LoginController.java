@@ -27,19 +27,18 @@ public class LoginController {
     public void initialize() {
         usernameField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                TryToLogIn();
+                sendLoginRequest();
             }
         });
 
         passwordField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
-                TryToLogIn();
+                sendLoginRequest();
             }
         });
     }
 
-
-    public void TryToLogIn() {
+    public void sendLoginRequest() {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
@@ -58,10 +57,12 @@ public class LoginController {
 
             if ("SUCCESS".equalsIgnoreCase(status)) {
                 String sessionId = responseJson.getString("sessionId");
+                String userRole = responseJson.getString("role");
                 Session.getInstance().setSessionId(sessionId);
+                Session.getInstance().setUserRole(userRole);
 
                 loginResponse.setText("Login successful!");
-                SceneChanger.changeScene(loginResponse, "/com/github/jokrkr/shopproject/ui/views/main_view.fxml");
+                SceneChanger.changeScene(loginResponse, "/com/github/jokrkr/shopproject/ui/views/MainView.fxml");
             } else {
                 String errorMessage = responseJson.has("message") ? responseJson.getString("message") : "An unknown error occurred.";
                 loginResponse.setText("Error: " + errorMessage);
