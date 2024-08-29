@@ -2,7 +2,6 @@ package com.github.jokrkr.shopproject.server.services;
 
 import com.github.jokrkr.shopproject.server.database.DatabaseConfig;
 import com.github.jokrkr.shopproject.server.handlers.SessionHandler;
-import com.github.jokrkr.shopproject.server.models.Role;
 import com.github.jokrkr.shopproject.server.response.LoginResponse;
 
 import java.security.MessageDigest;
@@ -21,17 +20,18 @@ public class LoginService {
     }
 
     public LoginResponse authenticate(String username, String password) throws SQLException {
-        String query = "SELECT password_hash FROM users WHERE username = ?";
+        String query = "SELECT password_hash, role FROM users WHERE username = ?";
         try (PreparedStatement stmt = conn.prepareStatement(query)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
                 String storedHash = rs.getString("password_hash");
+                String role = rs.getString("role");
 
                 if (storedHash.equals(password)) {
-                    String sessionId = SessionHandler.createSession(username, "userRole");
-                    return LoginResponse.success(sessionId);
+                    String sessionId = SessionHandler.createSession(username, role);
+                    return LoginResponse.success(sessionId, role);
                 } else {
                     return LoginResponse.incorrectPassword();
                 }
@@ -54,21 +54,6 @@ public class LoginService {
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error hashing password", e);
-        }
-    }
-
-    public Role getRole(String username) throws SQLException {
-        String query = "SELECT role FROM users WHERE username = ?";
-        try (PreparedStatement ps = conn.prepareStatement(query)) {
-            ps.setString(1, username);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.next()) {
-                String roleString = rs.getString("role");
-                return Role.valueOf(roleString.toUpperCase());
-            } else {
-                throw new SQLException("User not found");
-            }
         }
     }
 

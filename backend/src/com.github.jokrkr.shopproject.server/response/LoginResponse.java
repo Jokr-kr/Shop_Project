@@ -3,31 +3,32 @@ package com.github.jokrkr.shopproject.server.response;
 import org.json.JSONObject;
 
 public class LoginResponse {
+    private final int statusCode;
+    private final String sessionId;
+    private final String role;
+    private final String message;
 
-    private String status;
-    private String message;
-    private int statusCode;
-    private String sessionId;
-
-    // Constructors
-    public LoginResponse(String status, String message, int statusCode) {
-        this.status = status;
-        this.message = message;
+    private LoginResponse(int statusCode, String sessionId, String role, String message) {
         this.statusCode = statusCode;
-    }
-
-    public LoginResponse(String status, String message, int statusCode, String sessionId) {
-        this(status, message, statusCode); // Calls the other constructor
         this.sessionId = sessionId;
+        this.role = role;
+        this.message = message;
     }
 
-    // Getters
-    public String getStatus() {
-        return status;
+    public static LoginResponse success(String sessionId, String role) {
+        return new LoginResponse(200, sessionId, role, "Login successful");
     }
 
-    public String getMessage() {
-        return message;
+    public static LoginResponse incorrectPassword() {
+        return new LoginResponse(401, null, null, "Incorrect password");
+    }
+
+    public static LoginResponse usernameNotFound() {
+        return new LoginResponse(404, null, null, "Username not found");
+    }
+
+    public static LoginResponse serverError() {
+        return new LoginResponse(500, null, null, "Internal server error");
     }
 
     public int getStatusCode() {
@@ -38,32 +39,20 @@ public class LoginResponse {
         return sessionId;
     }
 
-    // Static factory methods
-    public static LoginResponse success(String sessionId) {
-        return new LoginResponse("SUCCESS", "Login successful", 200, sessionId);
+    public String getRole() {
+        return role;
     }
 
-    public static LoginResponse usernameNotFound() {
-        return new LoginResponse("USERNAME_NOT_FOUND", "Username does not exist", 404);
+    public String getMessage() {
+        return message;
     }
 
-    public static LoginResponse incorrectPassword() {
-        return new LoginResponse("INCORRECT_PASSWORD", "Incorrect password", 401);
-    }
-
-    public static LoginResponse serverError() {
-        return new LoginResponse("SERVER_ERROR", "An error occurred on the server", 500);
-    }
-
-    // Convert LoginResponse to JSON string
-    public String toJson() {
-        JSONObject jsonResponse = new JSONObject();
-        jsonResponse.put("status", this.status);
-        jsonResponse.put("message", this.message);
-        jsonResponse.put("statusCode", this.statusCode);
-        if (this.sessionId != null) {
-            jsonResponse.put("sessionId", this.sessionId);
-        }
-        return jsonResponse.toString();
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("statusCode", statusCode);
+        json.put("sessionId", sessionId);
+        json.put("role", role);
+        json.put("message", message);
+        return json;
     }
 }
