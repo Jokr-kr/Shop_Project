@@ -1,5 +1,6 @@
 package com.github.jokrkr.shopproject.ui.controllers;
 
+import com.github.jokrkr.shopproject.utils.ErrorHandler;
 import com.github.jokrkr.shopproject.utils.JsonFactory;
 import com.github.jokrkr.shopproject.utils.ServerCommunication;
 import javafx.fxml.FXML;
@@ -55,9 +56,7 @@ public class CreateUserController {
                 responseLabel.setText("Error: " + errorMessage);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            //todo better exception handling
-            responseLabel.setText("An error occurred during user creation.");
+            ErrorHandler.logAndShowError(e, responseLabel, "An error occurred during user creation.");
         }
     }
 }

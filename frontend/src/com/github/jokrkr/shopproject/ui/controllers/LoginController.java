@@ -1,6 +1,7 @@
 package com.github.jokrkr.shopproject.ui.controllers;
 
 import com.github.jokrkr.shopproject.state.Session;
+import com.github.jokrkr.shopproject.utils.ErrorHandler;
 import com.github.jokrkr.shopproject.utils.PasswordHasher;
 import com.github.jokrkr.shopproject.utils.SceneChanger;
 import com.github.jokrkr.shopproject.utils.ServerCommunication;
@@ -68,9 +69,7 @@ public class LoginController {
                 loginResponse.setText("Error: " + errorMessage);
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            // todo better exception handling
-            loginResponse.setText("An error occurred during login.");
+            ErrorHandler.logAndShowError(e, loginResponse, "An error occurred during login.");
         }
     }
 }
