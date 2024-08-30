@@ -9,7 +9,7 @@ import com.sun.net.httpserver.HttpHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonObject;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -25,8 +25,9 @@ public class DeleteUser implements HttpHandler {
         userService userService = null;
 
         try {
-            JsonObject requestBody = parser(exchange);
-            String username = requestBody.has("username") ? requestBody.get("username").getAsString() : null;
+            // Change parser to return org.json.JSONObject
+            JSONObject requestBody = parser(exchange); // Assuming parser is updated to return JSONObject
+            String username = requestBody.optString("username", null); // Using optString to safely get the value
 
             if (username == null) {
                 ResponseUtil.sendResponse(exchange, 400, "Missing required fields");

@@ -11,7 +11,7 @@ import com.sun.net.httpserver.HttpHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.gson.JsonObject;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -27,16 +27,16 @@ public class UpdateUserPassword implements HttpHandler {
         userService userService = null;
 
         try {
-            JsonObject requestBody = parser(exchange);
-            String username = requestBody.has("username") ? requestBody.get("username").getAsString() : null;
-            String newPassword = requestBody.has("newPassword") ? requestBody.get("newPassword").getAsString() : null;
+            JSONObject requestBody = parser(exchange); // Updated to use org.json.JSONObject
+            String username = requestBody.optString("username", null); // Using optString to avoid exceptions
+            String newPassword = requestBody.optString("newPassword", null);
 
             if (username == null || newPassword == null) {
                 ResponseUtil.sendResponse(exchange, 400, "Missing required fields");
                 return;
             }
 
-            User user = new User(username,newPassword, Role.regular);
+            User user = new User(username, newPassword, Role.regular);
 
             userService = new userService();
             userService.updatePassword(user);

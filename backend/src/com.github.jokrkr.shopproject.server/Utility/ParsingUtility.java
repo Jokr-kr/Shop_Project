@@ -3,9 +3,10 @@ package com.github.jokrkr.shopproject.server.Utility;
 import com.github.jokrkr.shopproject.server.models.Item;
 import com.github.jokrkr.shopproject.server.models.Role;
 import com.github.jokrkr.shopproject.server.models.User;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+
 import com.sun.net.httpserver.HttpExchange;
+
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -20,23 +21,23 @@ public class ParsingUtility {
     private static final Logger logger = Logger.getLogger(ParsingUtility.class.getName());
 
     public static User parseUser(HttpExchange exchange) throws IOException {
-        JsonObject object = parser(exchange);
+        JSONObject object = parser(exchange);
 
         String userName = "Default";
         String password = "Default";
         Role role = regular;
 
         // Log JSON for debugging
-        logger.info("Received JSON: " + object.toString());
+        logger.info("Received JSON: " + object);
 
         if (object.has("username")) {
-            userName = object.get("username").getAsString();
+            userName = object.optString("username", "Default"); // optString to avoid exceptions
         }
         if (object.has("password")) {
-            password = object.get("password").getAsString();
+            password = object.optString("password", "Default");
         }
         if (object.has("role")) {
-            String roleString = object.get("role").getAsString();
+            String roleString = object.optString("role", "regular");
             role = Role.valueOf(roleString);
         }
 
@@ -47,7 +48,7 @@ public class ParsingUtility {
     }
 
     public static Item parseItem(HttpExchange exchange) throws IOException {
-        JsonObject object = parser(exchange);
+        JSONObject object = parser(exchange);
 
         String type = "Default";
         String name = "Default";
@@ -56,30 +57,31 @@ public class ParsingUtility {
         double value = 0;
 
         // Log JSON for debugging
-        logger.info("Received JSON: " + object.toString());
+        logger.info("Received JSON: " + object);
 
         if (object.has("type")) {
-            type = object.get("type").getAsString();
+            type = object.optString("type", "Default");
         }
         if (object.has("name")) {
-            name = object.get("name").getAsString();
+            name = object.optString("name", "Default");
         }
         if (object.has("price")) {
-            price = object.get("price").getAsDouble();
+            price = object.optDouble("price", 0); // optDouble to avoid exceptions
         }
         if (object.has("quantity")) {
-            quantity = object.get("quantity").getAsInt();
+            quantity = object.optInt("quantity", 0); // optInt to avoid exceptions
         }
         if (object.has("value")) {
-            value = object.get("value").getAsDouble();
+            value = object.optDouble("value", 0); // optDouble to avoid exceptions
         }
+
         Item item = new Item(type, name, price, quantity, value);
         logger.info("Created Item with fields: " + item);
 
         return item;
     }
 
-    public static JsonObject parser(HttpExchange exchange) throws IOException {
+    public static JSONObject parser(HttpExchange exchange) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))) {
             StringBuilder rawJson = new StringBuilder();
             String line;
@@ -90,7 +92,7 @@ public class ParsingUtility {
 
             logger.info("Raw JSON received: " + jsonString);  // Log JSON for debugging
 
-            return JsonParser.parseString(jsonString).getAsJsonObject();
+            return new JSONObject(jsonString); // Convert raw JSON string to JSONObject
         }
     }
 }
