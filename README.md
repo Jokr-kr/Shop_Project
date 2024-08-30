@@ -94,7 +94,7 @@ The frontend is a JavaFX application that interacts with the server.
 6. **Run the Client**:
    - Start the frontend by running the `MainApp` class:
      ```bash
-     java -cp out/production/Shop_Project com.github.jokrkr.shopproject.ui.MainApp
+     java -cp out/production/Shop_Project com.github.jokrkr.shopproject.MainApp
      ```
 
 ## Usage

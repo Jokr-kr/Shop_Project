@@ -22,7 +22,7 @@ public class ParsingUtility {
     public static User parseUser(HttpExchange exchange) throws IOException {
         JsonObject object = parser(exchange);
 
-        String userName = "Default";
+        String userName = "Default"; 
         String password = "Default";
         Role role = regular;
 

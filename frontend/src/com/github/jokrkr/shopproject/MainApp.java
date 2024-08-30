@@ -1,4 +1,4 @@
-package com.github.jokrkr.shopproject.ui;
+package com.github.jokrkr.shopproject;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
