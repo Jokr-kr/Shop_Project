@@ -19,7 +19,7 @@ public class ServerApp {
     public static void main(String[] args) throws IOException, SQLException {
         InetSocketAddress address = new InetSocketAddress("127.0.0.1", 8080); //todo this can be changed based on personal preferences
 
-        HttpServer server = HttpServer.create(address, 0); // reminder backlog is related to amount of incoming requests
+        HttpServer server = HttpServer.create(address, 0);
 
         server.createContext("/items", new ItemHandler());
         server.createContext("/users", new UserHandler());
