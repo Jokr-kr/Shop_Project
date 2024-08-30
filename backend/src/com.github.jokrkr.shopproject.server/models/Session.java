@@ -1,8 +1,8 @@
 package com.github.jokrkr.shopproject.server.models;
 
 public class Session {
-    private String username;
-    private String role;
+    private final String username;
+    private final String role;
 
     public Session(String username, String role) {
         this.username = username;
