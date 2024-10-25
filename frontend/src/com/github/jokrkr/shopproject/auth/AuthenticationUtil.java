@@ -1,4 +1,4 @@
-package com.github.jokrkr.shopproject.server.auth;
+package com.github.jokrkr.shopproject.auth;
 
 import com.github.jokrkr.shopproject.server.handlers.SessionHandler;
 import com.github.jokrkr.shopproject.server.models.Session;

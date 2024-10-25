@@ -1,4 +1,4 @@
-package com.github.jokrkr.shopproject.server.auth;
+package com.github.jokrkr.shopproject.auth;
 
 import com.github.jokrkr.shopproject.server.Utility.ParsingUtility;
 import com.github.jokrkr.shopproject.server.models.User;

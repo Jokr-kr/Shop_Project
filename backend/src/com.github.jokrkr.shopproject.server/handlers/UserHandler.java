@@ -5,7 +5,7 @@ import com.github.jokrkr.shopproject.server.CRUD.Users.CreateUser;
 import com.github.jokrkr.shopproject.server.CRUD.Users.DeleteUser;
 import com.github.jokrkr.shopproject.server.CRUD.Users.ReadUser;
 import com.github.jokrkr.shopproject.server.CRUD.Users.UpdateUserPassword;
-import com.github.jokrkr.shopproject.server.auth.AuthenticationUtil;
+import com.github.jokrkr.shopproject.auth.AuthenticationUtil;
 import com.github.jokrkr.shopproject.server.models.Session;
 import com.github.jokrkr.shopproject.server.response.ResponseUtil;
 import com.sun.net.httpserver.HttpExchange;

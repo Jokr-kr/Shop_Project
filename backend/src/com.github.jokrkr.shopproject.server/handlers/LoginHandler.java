@@ -1,8 +1,8 @@
 package com.github.jokrkr.shopproject.server.handlers;
 
-import com.github.jokrkr.shopproject.server.auth.LogOut;
+import com.github.jokrkr.shopproject.auth.LogOut;
 import com.github.jokrkr.shopproject.server.CRUD.UnsupportedMethod;
-import com.github.jokrkr.shopproject.server.auth.LogIn;
+import com.github.jokrkr.shopproject.auth.LogIn;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 

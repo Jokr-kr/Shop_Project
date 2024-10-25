@@ -20,6 +20,21 @@ public class ParsingUtility {
 
     private static final Logger logger = Logger.getLogger(ParsingUtility.class.getName());
 
+    public static JSONObject parser(HttpExchange exchange) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))) {
+            StringBuilder rawJson = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                rawJson.append(line);
+            }
+            String jsonString = rawJson.toString();
+
+            logger.info("Raw JSON received: " + jsonString);  // Log JSON for debugging
+
+            return new JSONObject(jsonString); // Convert raw JSON string to JSONObject
+        }
+    }
+
     public static User parseUser(HttpExchange exchange) throws IOException {
         JSONObject object = parser(exchange);
 
@@ -27,7 +42,6 @@ public class ParsingUtility {
         String password = "Default";
         Role role = regular;
 
-        // Log JSON for debugging
         logger.info("Received JSON: " + object);
 
         if (object.has("username")) {
@@ -56,7 +70,7 @@ public class ParsingUtility {
         int quantity = 0;
         double value = 0;
 
-        // Log JSON for debugging
+
         logger.info("Received JSON: " + object);
 
         if (object.has("type")) {
@@ -81,18 +95,4 @@ public class ParsingUtility {
         return item;
     }
 
-    public static JSONObject parser(HttpExchange exchange) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(exchange.getRequestBody(), StandardCharsets.UTF_8))) {
-            StringBuilder rawJson = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                rawJson.append(line);
-            }
-            String jsonString = rawJson.toString();
-
-            logger.info("Raw JSON received: " + jsonString);  // Log JSON for debugging
-
-            return new JSONObject(jsonString); // Convert raw JSON string to JSONObject
-        }
-    }
 }

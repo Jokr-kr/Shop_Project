@@ -5,7 +5,7 @@ import com.github.jokrkr.shopproject.server.CRUD.Item.ReadItem;
 import com.github.jokrkr.shopproject.server.CRUD.Item.UpdateItem;
 import com.github.jokrkr.shopproject.server.CRUD.Item.DeleteItem;
 import com.github.jokrkr.shopproject.server.CRUD.UnsupportedMethod;
-import com.github.jokrkr.shopproject.server.auth.AuthenticationUtil;
+import com.github.jokrkr.shopproject.auth.AuthenticationUtil;
 import com.github.jokrkr.shopproject.server.models.Session;
 import com.github.jokrkr.shopproject.server.response.ResponseUtil;
 import com.sun.net.httpserver.HttpExchange;

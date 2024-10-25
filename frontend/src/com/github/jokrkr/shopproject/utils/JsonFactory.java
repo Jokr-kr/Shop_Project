@@ -11,22 +11,8 @@ public class JsonFactory {
         return json;
     }
 
-    public static JSONObject createCustomJson(Object... pairs) {
-        JSONObject json = new JSONObject();
-        for (int i = 0; i < pairs.length; i += 2) {
-            if (i + 1 < pairs.length) {
-                json.put(pairs[i].toString(), pairs[i + 1]);
-            } else {
-                throw new IllegalArgumentException("Invalid number of arguments, key without value.");
-            }
-        }
-        return json;
-    }
-
     public static JSONObject createJson() {
         return new JSONObject();
         // todo make additional functions for other use-cases
     }
-
-
 }
